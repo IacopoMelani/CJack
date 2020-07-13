@@ -1,9 +1,9 @@
 #include "card.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "../../utils/utils.h"
-
+#include "../utils/utils.h"
 #include "../../libs/mmalloc/alloc/mmalloc.h"
 
 unsigned int allValue[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
@@ -18,9 +18,7 @@ size_t allSymbols_count = NELEMS(allSymbols);
 
 struct Card *card_new(unsigned int value, const char *symbol, const char *seed)
 {
-    char buf[50];
-    sprintf(buf, "%s of %s", symbol, seed);
-    struct Card *c = (struct Card *)mmalloc(sizeof(struct Card), buf);
+    struct Card *c = (struct Card *)mmalloc(sizeof(struct Card), "card");
     if (c == NULL)
     {
         return NULL;
@@ -31,4 +29,18 @@ struct Card *card_new(unsigned int value, const char *symbol, const char *seed)
     c->seed = seed;
 
     return c;
+}
+
+char *card_info(struct Card *card)
+{
+    char *buf;
+    size_t needed = snprintf(NULL, 0, "%s of %s", card->symbol, card->seed) + 1;
+    buf = mmalloc(needed, "buffer");
+    sprintf(buf, "%s of %s", card->symbol, card->seed);
+    return buf;
+}
+
+void card_print(struct Card *card)
+{
+    printf("%s of %s\n", card->symbol, card->seed);
 }

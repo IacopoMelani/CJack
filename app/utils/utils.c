@@ -1,4 +1,5 @@
-#include "stdlib.h"
+#include <stdlib.h>
+#include <string.h>
 
 void shuffle_array(void *array, size_t n_elems, size_t elem_size)
 {

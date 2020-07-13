@@ -18,3 +18,7 @@ struct Card
 };
 
 struct Card *card_new(unsigned int svalue, const char *symbol, const char *seed);
+
+char *card_info(struct Card *card);
+
+void card_print(struct Card *card);
