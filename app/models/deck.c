@@ -14,7 +14,7 @@ void deck_init()
     deck_init_cards(&deck);
 }
 
-static void deck_init_cards(struct Card **deck)
+static void deck_init_cards(struct Card **d)
 {
     int cardPos = 0;
     struct Card *tmpCard;
@@ -24,7 +24,7 @@ static void deck_init_cards(struct Card **deck)
         for (unsigned int k = 0; k < allValue_count; k++)
         {
             tmpCard = card_new(allValue[k], allSymbols[k], allSeeds[i]);
-            deck[cardPos] = tmpCard;
+            d[cardPos] = tmpCard;
             cardPos++;
         }
     }

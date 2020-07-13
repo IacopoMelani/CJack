@@ -1,5 +1,7 @@
 #include "card.h"
 
+#include <stdio.h>
+
 #include "../../utils/utils.h"
 
 #include "../../libs/mmalloc/alloc/mmalloc.h"
@@ -16,10 +18,12 @@ size_t allSymbols_count = NELEMS(allSymbols);
 
 struct Card *card_new(unsigned int value, const char *symbol, const char *seed)
 {
-    struct Card *c = (struct Card *)mmalloc(sizeof(struct Card), "card");
+    char buf[50];
+    sprintf(buf, "%s of %s", symbol, seed);
+    struct Card *c = (struct Card *)mmalloc(sizeof(struct Card), buf);
     if (c == NULL)
     {
-        return null;
+        return NULL;
     }
 
     c->value = value;
