@@ -15,6 +15,8 @@ void deck_init()
     deck = mmalloc(DECK_LEN * sizeof(struct Card), "deck");
     deck_init_cards(deck);
 
+    shuffle_array(deck, DECK_LEN, sizeof(deck[0]));
+
     for (int i = 0; i < DECK_LEN; i++)
     {
         card_print(deck[i]);
