@@ -40,3 +40,22 @@ void card_print(struct Card *card)
 {
     printf("%s of %s\n", card->symbol, card->seed);
 }
+
+struct DrawnCard *drawn_card_init()
+{
+    struct DrawnCard *head = mmalloc(sizeof(struct DrawnCard), "drawn card");
+    return head;
+}
+
+void drawn_card_push(struct DrawnCard *head, struct Card *card)
+{
+    struct DrawnCard *pivot;
+
+    pivot = head;
+    while (pivot->next != NULL)
+    {
+        pivot = pivot->next;
+    }
+
+    pivot->card = card;
+}
