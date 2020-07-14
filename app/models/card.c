@@ -31,13 +31,9 @@ struct Card *card_new(unsigned int value, const char *symbol, const char *seed)
     return c;
 }
 
-char *card_info(struct Card *card)
+void card_info(struct Card *card, char *buf)
 {
-    char *buf;
-    size_t needed = snprintf(NULL, 0, "%s of %s", card->symbol, card->seed) + 1;
-    buf = mmalloc(needed, "buffer");
     sprintf(buf, "%s of %s", card->symbol, card->seed);
-    return buf;
 }
 
 void card_print(struct Card *card)

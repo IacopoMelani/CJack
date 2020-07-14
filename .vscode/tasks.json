@@ -10,7 +10,7 @@
                 "libs/**/**/*.c",
                 "app/**/*.c",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
+                "main",
                 "-Wall",
                 "-Wextra",
                 "-pedantic",

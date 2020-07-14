@@ -18,9 +18,7 @@ void deck_init()
     for (int i = 0; i < DECK_LEN; i++)
     {
         card_print(deck[i]);
-        char *context = card_info(deck[i]);
-        mfree(deck[i], context);
-        mfree(context, "buffer");
+        mfree(deck[i], "card");
     }
     mfree(deck, "deck");
 }

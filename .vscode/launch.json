@@ -8,7 +8,7 @@
             "name": "gcc - Compila ed esegui il debug del file attivo",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${workspaceRoot}/main",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
