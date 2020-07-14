@@ -2,15 +2,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../utils/utils.h"
 #include "../../libs/mmalloc/alloc/mmalloc.h"
 
-unsigned int allValue[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+#define SYMBOL_ACE "Ace"
+
+unsigned int allValue[] = {11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
 
 const char *allSeeds[] = {"diamonds", "club", "hearts", "spades"};
 
-const char *allSymbols[] = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Height", "Nine", "Ten", "Jack", "Queen", "King"};
+const char *allSymbols[] = {SYMBOL_ACE, "Two", "Three", "Four", "Five", "Six", "Seven", "Height", "Nine", "Ten", "Jack", "Queen", "King"};
 
 size_t allValue_count = NELEMS(allValue);
 size_t allSeeds_count = NELEMS(allSeeds);
@@ -36,26 +39,17 @@ void card_info(struct Card *card, char *buf)
     sprintf(buf, "%s of %s", card->symbol, card->seed);
 }
 
+bool card_is_ace(struct Card *card)
+{
+    if (strcmp(card->symbol, SYMBOL_ACE) == 0)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void card_print(struct Card *card)
 {
     printf("%s of %s\n", card->symbol, card->seed);
-}
-
-struct DrawnCard *drawn_card_init()
-{
-    struct DrawnCard *head = mmalloc(sizeof(struct DrawnCard), "drawn card");
-    return head;
-}
-
-void drawn_card_push(struct DrawnCard *head, struct Card *card)
-{
-    struct DrawnCard *pivot;
-
-    pivot = head;
-    while (pivot->next != NULL)
-    {
-        pivot = pivot->next;
-    }
-
-    pivot->card = card;
 }
