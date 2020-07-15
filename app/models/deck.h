@@ -1,7 +1,9 @@
 #pragma once
 
+#include "card.h"
+
 #define DECK_LEN 52
 
-void deck_init();
+struct Card *deck_draw_card();
 
-void deck_shuffle();
+void deck_init();
