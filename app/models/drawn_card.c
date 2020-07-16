@@ -5,7 +5,8 @@
 #define MAX_SCORE_LIMIT 21
 
 static void drawn_card_check_aces(struct DrawnCard *head);
-static unsigned int drawn_cars_total_score_raw(struct DrawnCard *head);
+static struct DrawnCard *drawn_card_init();
+static unsigned int drawn_cards_total_score_raw(struct DrawnCard *head);
 
 bool drawn_card_check_blackjack(struct DrawnCard *head)
 {
@@ -17,34 +18,31 @@ bool drawn_card_check_blackjack(struct DrawnCard *head)
     return false;
 }
 
-struct DrawnCard *drawn_card_init()
-{
-    struct DrawnCard *head = mmalloc(sizeof(struct DrawnCard), "drawn card");
-    return head;
-}
-
 void drawn_card_push(struct DrawnCard *head, struct Card *card)
 {
-    struct DrawnCard *pivot;
+    struct DrawnCard *pivot, *node;
+
+    node = drawn_card_init();
+    node->card = card;
 
     pivot = head;
-    while (pivot->next != NULL)
+    while (pivot != NULL)
     {
         pivot = pivot->next;
     }
 
-    pivot->card = card;
+    pivot = node;
 }
 
 unsigned int drawn_card_total_score(struct DrawnCard *head)
 {
     drawn_card_check_aces(head);
-    return drawn_cars_total_score_raw(head);
+    return drawn_cards_total_score_raw(head);
 }
 
 static void drawn_card_check_aces(struct DrawnCard *head)
 {
-    if (drawn_cars_total_score_raw(head) <= MAX_SCORE_LIMIT)
+    if (drawn_cards_total_score_raw(head) <= MAX_SCORE_LIMIT)
     {
         return;
     }
@@ -54,7 +52,7 @@ static void drawn_card_check_aces(struct DrawnCard *head)
     pivot = head;
     while (pivot != NULL)
     {
-        if (drawn_cars_total_score_raw(head) <= MAX_SCORE_LIMIT)
+        if (drawn_cards_total_score_raw(head) <= MAX_SCORE_LIMIT)
         {
             return;
         }
@@ -68,7 +66,13 @@ static void drawn_card_check_aces(struct DrawnCard *head)
     }
 }
 
-static unsigned int drawn_cars_total_score_raw(struct DrawnCard *head)
+static struct DrawnCard *drawn_card_init()
+{
+    struct DrawnCard *node = mmalloc(sizeof(struct DrawnCard), "drawn card");
+    return node;
+}
+
+static unsigned int drawn_cards_total_score_raw(struct DrawnCard *head)
 {
     struct DrawnCard *pivot;
     unsigned int score = 0;

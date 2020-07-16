@@ -70,7 +70,7 @@ static void deck_arr_init_cards(struct Card **d)
     {
         for (unsigned int k = 0; k < allValue_count; k++)
         {
-            struct Card *tmpCard = card_new(allValue[k], allSymbols[k], allSeeds[i]);
+            struct Card *tmpCard = card_init(allValue[k], allSymbols[k], allSeeds[i]);
             d[cardPos] = tmpCard;
             cardPos++;
         }

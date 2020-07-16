@@ -12,7 +12,7 @@
 
 #define unused __attribute__((unused))
 
-typedef enum
+typedef enum bool
 {
     false,
     true

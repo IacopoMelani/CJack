@@ -19,7 +19,12 @@ size_t allValue_count = NELEMS(allValue);
 size_t allSeeds_count = NELEMS(allSeeds);
 size_t allSymbols_count = NELEMS(allSymbols);
 
-struct Card *card_new(unsigned int value, const char *symbol, const char *seed)
+void card_info(struct Card *card, char *buf)
+{
+    sprintf(buf, "%s of %s", card->symbol, card->seed);
+}
+
+struct Card *card_init(unsigned int value, const char *symbol, const char *seed)
 {
     struct Card *c = (struct Card *)mmalloc(sizeof(struct Card), "card");
     if (c == NULL)
@@ -32,11 +37,6 @@ struct Card *card_new(unsigned int value, const char *symbol, const char *seed)
     c->seed = seed;
 
     return c;
-}
-
-void card_info(struct Card *card, char *buf)
-{
-    sprintf(buf, "%s of %s", card->symbol, card->seed);
 }
 
 bool card_is_ace(struct Card *card)

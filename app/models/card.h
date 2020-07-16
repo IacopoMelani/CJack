@@ -18,9 +18,9 @@ struct Card
     const char *seed;
 };
 
-struct Card *card_new(unsigned int svalue, const char *symbol, const char *seed);
-
 void card_info(struct Card *card, char *buf);
+
+struct Card *card_init(unsigned int svalue, const char *symbol, const char *seed);
 
 bool card_is_ace(struct Card *card);
 
