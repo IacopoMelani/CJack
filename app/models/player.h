@@ -9,6 +9,8 @@ void player_draw_card(struct Player *player, struct Card *card);
 
 struct Player *player_init_with_name(char *name);
 
+char *player_name(struct Player *player);
+
 unsigned int player_stand(struct Player *player);
 
 void player_win_amount(struct Player *player, unsigned int amount);

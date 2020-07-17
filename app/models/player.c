@@ -39,6 +39,11 @@ struct Player *player_init_with_name(char *name)
     return player;
 }
 
+char *player_name(struct Player *player)
+{
+    return player->name;
+}
+
 unsigned int player_stand(struct Player *player)
 {
     return drawn_card_total_score(player->cards);
