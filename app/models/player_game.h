@@ -6,9 +6,12 @@
 
 struct PlayerGame
 {
+    struct Player *player;
+    unsigned int amount_bet;
+    bool is_cpu;
     struct PlayerGame *next;
 };
 
 void player_game_drawn_card(struct PlayerGame *player_game, struct Card *card);
 
-struct PlayerGame *player_game_init(struct Player *player, unsigned int amount_bet, bool is_cpu);
+struct PlayerGame *player_game_init(struct Player *player, bool is_cpu);

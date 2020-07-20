@@ -1,5 +1,5 @@
 
-#include "app/models/deck.h"
+#include "app/models/dealer.h"
 #include "libs/mmalloc/registry/registry.h"
 
 #ifndef DEBUG
@@ -8,7 +8,8 @@
 
 int main()
 {
-    deck_init();
+    dealer_init();
+    dealer_play();
 
 #if DEBUG
     registry_print_alloc();

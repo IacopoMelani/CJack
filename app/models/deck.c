@@ -48,11 +48,11 @@ void deck_init()
     deck_arr_init_cards(deck_arr);
     deck_arr_shuffle();
     deck_stack_init();
-    for (int i = 0; i < DECK_LEN; i++)
-    {
-        mfree(deck_draw_card(), "card");
-    }
-    deck_stack_dealloc();
+    // for (int i = 0; i < DECK_LEN; i++)
+    // {
+    //     mfree(deck_draw_card(), "card");
+    // }
+    // deck_stack_dealloc();
 }
 
 static void deck_arr_dealloc()
