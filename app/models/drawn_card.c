@@ -21,6 +21,12 @@ bool drawn_card_check_blackjack(struct DrawnCard *head)
     return false;
 }
 
+void drawn_card_dealloc(struct DrawnCard *drawn_card)
+{
+    card_dealloc(drawn_card->card);
+    mfree(drawn_card, CONTEXT_DRAWN_CARD);
+}
+
 unsigned int drawn_card_len(struct DrawnCard *head)
 {
     unsigned int len;
@@ -37,20 +43,21 @@ unsigned int drawn_card_len(struct DrawnCard *head)
     return len;
 }
 
-void drawn_card_push(struct DrawnCard *head, struct Card *card)
+void drawn_card_push(struct DrawnCard **head, struct Card *card)
 {
-    struct DrawnCard *pivot, *node;
+    struct DrawnCard **pivot;
+    struct DrawnCard *node = NULL;
 
     node = drawn_card_init();
     node->card = card;
 
     pivot = head;
-    while (pivot != NULL)
+    while (*pivot != NULL)
     {
-        pivot = pivot->next;
+        pivot = &(*pivot)->next;
     }
 
-    pivot = node;
+    *pivot = node;
 }
 
 unsigned int drawn_card_total_score(struct DrawnCard *head)
@@ -87,7 +94,13 @@ static void drawn_card_check_aces(struct DrawnCard *head)
 
 static struct DrawnCard *drawn_card_init()
 {
-    struct DrawnCard *node = mmalloc(sizeof(struct DrawnCard), CONTEXT_DRAWN_CARD);
+    struct DrawnCard *node = NULL;
+    node = mmalloc(sizeof(struct DrawnCard), CONTEXT_DRAWN_CARD);
+    if (node != NULL)
+    {
+        node->card = NULL;
+        node->next = NULL;
+    }
     return node;
 }
 

@@ -12,6 +12,8 @@ struct PlayerGame
     struct PlayerGame *next;
 };
 
+void player_game_dealloc(struct PlayerGame *player_game);
+
 void player_game_drawn_card(struct PlayerGame *player_game, struct Card *card);
 
 struct PlayerGame *player_game_init(struct Player *player, bool is_cpu);

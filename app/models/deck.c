@@ -23,6 +23,12 @@ static void deck_stack_init();
 struct Card **deck_arr;
 struct DeckStack *deck_stack;
 
+void deck_dealloc()
+{
+    deck_arr_dealloc();
+    deck_stack_dealloc();
+}
+
 struct Card *deck_draw_card()
 {
     struct Card *card = NULL;
@@ -48,11 +54,6 @@ void deck_init()
     deck_arr_init_cards(deck_arr);
     deck_arr_shuffle();
     deck_stack_init();
-    // for (int i = 0; i < DECK_LEN; i++)
-    // {
-    //     mfree(deck_draw_card(), "card");
-    // }
-    // deck_stack_dealloc();
 }
 
 static void deck_arr_dealloc()

@@ -1,8 +1,12 @@
 #include "player.h"
 
+#include <string.h>
+
 #include "../../libs/mmalloc/alloc/mmalloc.h"
 
 #define INITIAL_BANK_ACCOUNT 20
+
+#define CONTEXT_PLAYER "player"
 
 struct Player
 {
@@ -23,18 +27,32 @@ bool player_bet_amount(struct Player *player, unsigned int amount)
     return true;
 }
 
+void player_dealloc(struct Player *player)
+{
+    struct DrawnCard *pivot, *old_node;
+
+    pivot = player->cards;
+    while (pivot != NULL)
+    {
+        old_node = pivot;
+        pivot = pivot->next;
+        drawn_card_dealloc(old_node);
+    }
+    mfree(player, CONTEXT_PLAYER);
+}
+
 void player_draw_card(struct Player *player, struct Card *card)
 {
-    drawn_card_push(player->cards, card);
+    drawn_card_push(&player->cards, card);
 }
 
 struct Player *player_init_with_name(char *name)
 {
-    struct Player *player = mmalloc(sizeof(struct Player), "player");
+    struct Player *player = mmalloc(sizeof(struct Player), CONTEXT_PLAYER);
 
-    player->name = name;
     player->bank_account = INITIAL_BANK_ACCOUNT;
     player->cards = NULL;
+    memcpy(player->name, name, strlen(name) + 1);
 
     return player;
 }

@@ -4,6 +4,12 @@
 
 #define CONTEXT_PLAYER_GAME "player game"
 
+void player_game_dealloc(struct PlayerGame *player_game)
+{
+    player_dealloc(player_game->player);
+    mfree(player_game, CONTEXT_PLAYER_GAME);
+}
+
 void player_game_drawn_card(struct PlayerGame *player_game, struct Card *card)
 {
     player_draw_card(player_game->player, card);
