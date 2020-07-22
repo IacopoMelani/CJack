@@ -7,6 +7,12 @@
 
 #define CONTEXT_DRAWN_CARD "drawn card"
 
+#define CHECK_VALID_SCORE(head)                               \
+    if (drawn_cards_total_score_raw(head) <= MAX_SCORE_LIMIT) \
+    {                                                         \
+        return;                                               \
+    }
+
 static void drawn_card_check_aces(struct DrawnCard *head);
 static struct DrawnCard *drawn_card_init();
 static unsigned int drawn_cards_total_score_raw(struct DrawnCard *head);
@@ -68,20 +74,15 @@ unsigned int drawn_card_total_score(struct DrawnCard *head)
 
 static void drawn_card_check_aces(struct DrawnCard *head)
 {
-    if (drawn_cards_total_score_raw(head) <= MAX_SCORE_LIMIT)
-    {
-        return;
-    }
+    CHECK_VALID_SCORE(head);
 
-    struct DrawnCard *pivot;
+    struct DrawnCard *
+        pivot;
 
     pivot = head;
     while (pivot != NULL)
     {
-        if (drawn_cards_total_score_raw(head) <= MAX_SCORE_LIMIT)
-        {
-            return;
-        }
+        CHECK_VALID_SCORE(head);
 
         if (card_is_ace(pivot->card))
         {
