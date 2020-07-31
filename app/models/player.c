@@ -38,6 +38,7 @@ void player_dealloc(struct Player *player)
         pivot = pivot->next;
         drawn_card_dealloc(old_node);
     }
+    mfree(player->name, "player name");
     mfree(player, CONTEXT_PLAYER);
 }
 
@@ -52,7 +53,7 @@ struct Player *player_init_with_name(char *name)
 
     player->bank_account = INITIAL_BANK_ACCOUNT;
     player->cards = NULL;
-    memcpy(player->name, name, strlen(name) + 1);
+    player->name = name;
 
     return player;
 }

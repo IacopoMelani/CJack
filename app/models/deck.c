@@ -47,9 +47,6 @@ struct Card *deck_draw_card()
 
 void deck_init()
 {
-    deck_arr_dealloc();
-    deck_stack_dealloc();
-
     deck_arr = mmalloc(DECK_LEN * sizeof(struct Card), "deck arr");
     deck_arr_init_cards(deck_arr);
     deck_arr_shuffle();
@@ -94,7 +91,7 @@ static void deck_stack_dealloc()
     while (pivot != NULL)
     {
         old = pivot;
-        mfree(pivot->card, "card");
+        card_dealloc(pivot->card);
         pivot = pivot->next;
         mfree(old, "deck stack");
     }
@@ -119,6 +116,4 @@ static void deck_stack_init()
             pivot = pivot->next;
         }
     }
-
-    deck_arr_dealloc();
 }

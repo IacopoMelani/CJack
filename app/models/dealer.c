@@ -157,14 +157,14 @@ static void draw_card(struct Card *card)
 
 static void init_players()
 {
-    char player_name[50];
+    char *player_name = mmalloc(50 * sizeof(char), "player name");
 
 #if !DEBUG
     printf("\nInsert player name: ");
     scanf("%s", player_name);
     printf("\n");
 #else
-    strcpy(player_name, "John");
+    memcpy(player_name, "John", 4);
 #endif
 
     dealer_add_player_game(player_game_init(player_init_with_name(player_name), false));
