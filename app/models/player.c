@@ -1,5 +1,6 @@
 #include "player.h"
 
+#include <stdio.h>
 #include <string.h>
 
 #include "../../libs/mmalloc/alloc/mmalloc.h"
@@ -14,6 +15,8 @@ struct Player
     struct DrawnCard *cards;
     unsigned int bank_account;
 };
+
+static void player_sprintf(char *buf, struct Player *player);
 
 bool player_bet_amount(struct Player *player, unsigned int amount)
 {
@@ -38,8 +41,10 @@ void player_dealloc(struct Player *player)
         pivot = pivot->next;
         drawn_card_dealloc(old_node);
     }
+    char buf[80];
+    player_sprintf(buf, player);
     mfree(player->name, "player name");
-    mfree(player, CONTEXT_PLAYER);
+    mfree(player, buf);
 }
 
 void player_draw_card(struct Player *player, struct Card *card)
@@ -71,4 +76,9 @@ unsigned int player_stand(struct Player *player)
 void player_win_amount(struct Player *player, unsigned int amount)
 {
     player->bank_account += amount;
+}
+
+static void player_sprintf(char *buf, struct Player *player)
+{
+    sprintf(buf, "Player name: %s, bank account: %u", player->name, player->bank_account);
 }
