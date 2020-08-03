@@ -20,10 +20,10 @@ struct Card
 
 void card_dealloc(struct Card *card);
 
-void card_info(struct Card *card, char *buf);
-
 struct Card *card_init(unsigned int svalue, const char *symbol, const char *seed);
 
 bool card_is_ace(struct Card *card);
 
 void card_print(struct Card *card);
+
+void card_sprintf(char *buf, struct Card *card);

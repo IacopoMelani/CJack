@@ -72,6 +72,9 @@ void dealer_play()
         draw_card(deck_draw_card());
     }
 
+    drawn_card_print(dealer->cards);
+    printf("Total dealer sccore: %u\n", drawn_card_total_score(dealer->cards));
+
     deck_dealloc();
     dealloc();
 }

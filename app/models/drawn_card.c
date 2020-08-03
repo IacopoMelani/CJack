@@ -49,6 +49,18 @@ unsigned int drawn_card_len(struct DrawnCard *head)
     return len;
 }
 
+void drawn_card_print(struct DrawnCard *drawn_card)
+{
+    struct DrawnCard *pivot;
+
+    pivot = drawn_card;
+    while (pivot != NULL)
+    {
+        card_print(pivot->card);
+        pivot = pivot->next;
+    }
+}
+
 void drawn_card_push(struct DrawnCard **head, struct Card *card)
 {
     struct DrawnCard **pivot;
