@@ -8,6 +8,7 @@
 #include "player_game.h"
 
 #include "../../libs/mmalloc/alloc/mmalloc.h"
+#include "../utils/utils.h"
 
 #ifndef DEBUG
 #define DEBUG 0
@@ -29,6 +30,9 @@ static void dealloc_drawn_cards();
 static void dealloc_player_game();
 static void draw_card(struct Card *card);
 static void init_players();
+#if !DEBUG
+static int show_options();
+#endif
 
 void dealer_add_player_game(struct PlayerGame *player_game)
 {
@@ -63,8 +67,47 @@ void dealer_play()
     // player play
     while (pivot != NULL)
     {
+        bool stop = false;
+
+        printf("%s it's your turn!\n", player_name(pivot->player));
+
+        while (!stop && player_total_score(pivot->player) < MAX_VALID_SCORE)
+        {
+            clear_screen();
+            player_print_cards(pivot->player);
+            printf("Actual player score: %u\n", player_total_score(pivot->player));
+#if DEBUG
+            if (player_total_score(pivot->player) < MIN_SCORE_DEALER_STOP)
+            {
+                player_draw_card(pivot->player, deck_draw_card());
+            }
+            else
+            {
+                stop = true;
+            }
+#else
+            int s;
+            s = show_options();
+            switch (s)
+            {
+            case 1:
+                player_draw_card(pivot->player, deck_draw_card());
+                break;
+            case 2:
+            default:
+                stop = true;
+                break;
+            }
+#endif
+        }
+        clear_screen();
+        player_print_cards(pivot->player);
+        printf("Total player score: %u\n", player_total_score(pivot->player));
+
         pivot = pivot->next;
     }
+
+    printf("\nIt's dealer turns\n");
 
     // dealer play
     while (drawn_card_total_score(dealer->cards) < MIN_SCORE_DEALER_STOP)
@@ -73,7 +116,7 @@ void dealer_play()
     }
 
     drawn_card_print(dealer->cards);
-    printf("Total dealer sccore: %u\n", drawn_card_total_score(dealer->cards));
+    printf("Total dealer score: %u\n", drawn_card_total_score(dealer->cards));
 
     deck_dealloc();
     dealloc();
@@ -172,3 +215,24 @@ static void init_players()
 
     dealer_add_player_game(player_game_init(player_init_with_name(player_name), false));
 }
+
+#if !DEBUG
+static int show_options()
+{
+    int s;
+
+ask_show:
+
+    printf("\n1) Ask card \n");
+    printf("2) Stand \n");
+    printf("Make your choice: \n");
+    scanf("%d", &s);
+
+    if (s != 1 && s != 2)
+    {
+        goto ask_show;
+    }
+
+    return s;
+}
+#endif

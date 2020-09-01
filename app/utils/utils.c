@@ -2,6 +2,23 @@
 #include <string.h>
 #include <time.h>
 
+#ifndef DEBUG
+#define DEBUG 0
+#endif
+
+void clear_screen()
+{
+#if !DEBUG
+#ifdef __linux__
+    system("clear");
+#elif _WIN32
+    system("cls");
+#else
+    // nothing :(
+#endif
+#endif
+}
+
 void shuffle_array(void *array, size_t n, size_t size)
 {
     char tmp[size];

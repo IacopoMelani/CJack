@@ -68,7 +68,17 @@ char *player_name(struct Player *player)
     return player->name;
 }
 
+void player_print_cards(struct Player *player)
+{
+    drawn_card_print(player->cards);
+}
+
 unsigned int player_stand(struct Player *player)
+{
+    return player_total_score(player);
+}
+
+unsigned int player_total_score(struct Player *player)
 {
     return drawn_card_total_score(player->cards);
 }

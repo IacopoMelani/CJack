@@ -4,6 +4,8 @@
 
 #define MIN_SCORE_DEALER_STOP 17
 
+#define MAX_VALID_SCORE 21
+
 void dealer_add_player_game(struct PlayerGame *player_game);
 
 void dealer_init();
