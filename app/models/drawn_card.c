@@ -78,6 +78,22 @@ void drawn_card_push(struct DrawnCard **head, struct Card *card)
     *pivot = node;
 }
 
+unsigned int drawn_card_total_cards(struct DrawnCard *head)
+{
+    struct DrawnCard *pivot;
+
+    unsigned int tot = 0;
+
+    pivot = head;
+    while (pivot != NULL)
+    {
+        tot++;
+        pivot = pivot->next;
+    }
+
+    return tot;
+}
+
 unsigned int drawn_card_total_score(struct DrawnCard *head)
 {
     drawn_card_check_aces(head);

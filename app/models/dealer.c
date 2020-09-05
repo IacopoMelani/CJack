@@ -31,7 +31,7 @@ static void dealloc_player_game();
 static void draw_card(struct Card *card);
 static void init_players();
 #if !DEBUG
-static int show_options();
+static int show_options(struct PlayerGame *player_game);
 #endif
 
 void dealer_add_player_game(struct PlayerGame *player_game)
@@ -87,15 +87,23 @@ void dealer_play()
             }
 #else
             int s;
-            s = show_options();
+            s = show_options(pivot);
             switch (s)
             {
             case 1:
                 player_draw_card(pivot->player, deck_draw_card());
                 break;
+            case 3:
+                if (player_total_cards(pivot->player) <= MAX_CARDS_FOR_DOUBLE)
+                {
+                    player_draw_card(pivot->player, deck_draw_card());
+                    stop = true;
+                }
+                break;
             case 2:
-            default:
                 stop = true;
+                break;
+            default:
                 break;
             }
 #endif
@@ -217,21 +225,18 @@ static void init_players()
 }
 
 #if !DEBUG
-static int show_options()
+static int show_options(struct PlayerGame *player_game)
 {
     int s;
 
-ask_show:
-
     printf("\n1) Ask card \n");
     printf("2) Stand \n");
+    if (player_total_cards(player_game->player) <= MAX_CARDS_FOR_DOUBLE)
+    {
+        printf("3) Double\n");
+    }
     printf("Make your choice: \n");
     scanf("%d", &s);
-
-    if (s != 1 && s != 2)
-    {
-        goto ask_show;
-    }
 
     return s;
 }

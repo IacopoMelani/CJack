@@ -78,6 +78,11 @@ unsigned int player_stand(struct Player *player)
     return player_total_score(player);
 }
 
+unsigned int player_total_cards(struct Player *player)
+{
+    return drawn_card_total_cards(player->cards);
+}
+
 unsigned int player_total_score(struct Player *player)
 {
     return drawn_card_total_score(player->cards);

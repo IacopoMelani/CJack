@@ -17,6 +17,8 @@ void player_print_cards(struct Player *player);
 
 unsigned int player_stand(struct Player *player);
 
+unsigned int player_total_cards(struct Player *player);
+
 unsigned int player_total_score(struct Player *player);
 
 void player_win_amount(struct Player *player, unsigned int amount);

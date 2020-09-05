@@ -6,6 +6,8 @@
 
 #define MAX_VALID_SCORE 21
 
+#define MAX_CARDS_FOR_DOUBLE 2
+
 void dealer_add_player_game(struct PlayerGame *player_game);
 
 void dealer_init();
