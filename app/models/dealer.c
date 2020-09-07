@@ -16,6 +16,13 @@
 
 #define CONTEXT_DEALER "dealer"
 
+enum options
+{
+    card = 1,
+    stand,
+    double_down
+};
+
 struct Dealer
 {
     struct DrawnCard *cards;
@@ -90,17 +97,17 @@ void dealer_play()
             s = show_options(pivot);
             switch (s)
             {
-            case 1:
+            case card:
                 player_draw_card(pivot->player, deck_draw_card());
                 break;
-            case 3:
+            case double_down:
                 if (player_total_cards(pivot->player) <= MAX_CARDS_FOR_DOUBLE)
                 {
                     player_draw_card(pivot->player, deck_draw_card());
                     stop = true;
                 }
                 break;
-            case 2:
+            case stand:
                 stop = true;
                 break;
             default:
