@@ -2,13 +2,9 @@
 #include <string.h>
 #include <time.h>
 
-#ifndef DEBUG
-#define DEBUG 0
-#endif
-
 void clear_screen()
 {
-#if !DEBUG
+#ifndef DEBUG
 #ifdef __linux__
     system("clear");
 #elif _WIN32

@@ -10,10 +10,6 @@
 #include "../../libs/mmalloc/alloc/mmalloc.h"
 #include "../utils/utils.h"
 
-#ifndef DEBUG
-#define DEBUG 0
-#endif
-
 #define CONTEXT_DEALER "dealer"
 
 enum options
@@ -38,7 +34,7 @@ static void dealloc_drawn_cards();
 static void dealloc_player_game();
 static void draw_card(struct Card *card);
 static void init_players();
-#if !DEBUG
+#ifndef DEBUG
 static int show_options(struct PlayerGame *player_game);
 #endif
 
@@ -84,7 +80,7 @@ void dealer_play()
             clear_screen();
             player_print_cards(pivot->player);
             printf("Actual player score: %u\n", player_total_score(pivot->player));
-#if DEBUG
+#ifdef DEBUG
             if (player_total_score(pivot->player) < MIN_SCORE_DEALER_STOP)
             {
                 player_draw_card(pivot->player, deck_draw_card());
@@ -243,7 +239,7 @@ static void init_players()
 {
     char *player_name = mmalloc(50 * sizeof(char), "player name");
 
-#if !DEBUG
+#ifndef DEBUG
     printf("\nInsert player name: ");
     scanf("%s", player_name);
     printf("\n");
@@ -254,7 +250,7 @@ static void init_players()
     dealer_add_player_game(player_game_init(player_init_with_name(player_name), false));
 }
 
-#if !DEBUG
+#ifndef DEBUG
 static int show_options(struct PlayerGame *player_game)
 {
     int s;

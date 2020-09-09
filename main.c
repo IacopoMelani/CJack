@@ -3,16 +3,12 @@
 #include "libs/mmalloc/registry/registry.h"
 #include "app/utils/utils.h"
 
-#ifndef DEBUG
-#define DEBUG 0
-#endif
-
 int main()
 {
     dealer_init();
     dealer_play();
 
-#if DEBUG
+#ifdef DEBUG
     registry_print_alloc();
 #endif
 
