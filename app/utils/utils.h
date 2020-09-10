@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <stddef.h>
 
@@ -7,3 +8,5 @@
 void clear_screen();
 
 void shuffle_array(void *array, size_t n, size_t size);
+
+#endif

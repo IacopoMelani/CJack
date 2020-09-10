@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CARD_H
+#define CARD_H
 
 #include <stddef.h>
 #include "../../libs/mmalloc/types/types.h"
@@ -27,3 +28,5 @@ bool card_is_ace(struct Card *card);
 void card_print(struct Card *card);
 
 void card_sprintf(char *buf, struct Card *card);
+
+#endif

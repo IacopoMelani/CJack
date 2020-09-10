@@ -1,11 +1,14 @@
-#pragma once
+#ifndef DECK_H
+#define DECK_H
 
 #include "card.h"
 
 #define DECK_LEN 52
 
-void deck_dealloc();
+struct Deck;
 
-struct Card *deck_draw_card();
+void deck_dealloc(struct Deck *);
+struct Card *deck_draw_card(struct Deck *);
+struct Deck *deck_init();
 
-void deck_init();
+#endif

@@ -6,7 +6,9 @@
 #include "../utils/utils.h"
 #include "../../libs/mmalloc/alloc/mmalloc.h"
 
-#define SHUFFLE_TIMES 5
+#ifndef SHUFFLE_TIMES
+#define SHUFFLE_TIMES 10
+#endif
 
 struct DeckStack
 {
@@ -14,46 +16,51 @@ struct DeckStack
     struct DeckStack *next;
 };
 
-static void deck_arr_dealloc();
-static void deck_arr_init_cards(struct Card **d);
-static void deck_arr_shuffle();
-static void deck_stack_dealloc();
-static void deck_stack_init();
-
-struct Card **deck_arr;
-struct DeckStack *deck_stack;
-
-void deck_dealloc()
+struct Deck
 {
-    deck_arr_dealloc();
-    deck_stack_dealloc();
+    struct DeckStack *deck_stack;
+};
+
+static void deck_arr_dealloc(struct Card **);
+static void deck_arr_init_cards(struct Card **d);
+static void deck_arr_shuffle(struct Card **);
+static void deck_stack_dealloc(struct DeckStack *);
+static struct DeckStack *deck_stack_init(struct Card **);
+
+void deck_dealloc(struct Deck *deck)
+{
+    deck_stack_dealloc(deck->deck_stack);
+    mfree(deck, "deck");
 }
 
-struct Card *deck_draw_card()
+struct Card *deck_draw_card(struct Deck *deck)
 {
     struct Card *card = NULL;
 
-    if (deck_stack != NULL)
+    if (deck->deck_stack != NULL)
     {
-        struct DeckStack *old_head = deck_stack;
+        struct DeckStack *old_head = deck->deck_stack;
 
-        card = deck_stack->card;
-        deck_stack = deck_stack->next;
+        card = deck->deck_stack->card;
+        deck->deck_stack = deck->deck_stack->next;
         mfree(old_head, "deck stack");
     }
 
     return card;
 }
 
-void deck_init()
+struct Deck *deck_init()
 {
-    deck_arr = mmalloc(DECK_LEN * sizeof(struct Card), "deck arr");
+    struct Deck *deck = mmalloc(sizeof(struct Deck), "deck");
+    struct Card **deck_arr = mmalloc(DECK_LEN * sizeof(struct Card), "deck arr");
     deck_arr_init_cards(deck_arr);
-    deck_arr_shuffle();
-    deck_stack_init();
+    deck_arr_shuffle(deck_arr);
+    deck->deck_stack = deck_stack_init(deck_arr);
+    deck_arr_dealloc(deck_arr);
+    return deck;
 }
 
-static void deck_arr_dealloc()
+static void deck_arr_dealloc(struct Card **deck_arr)
 {
     if (deck_arr != NULL)
     {
@@ -75,7 +82,7 @@ static void deck_arr_init_cards(struct Card **d)
     }
 }
 
-static void deck_arr_shuffle()
+static void deck_arr_shuffle(struct Card **deck_arr)
 {
     for (int i = 0; i < SHUFFLE_TIMES; i++)
     {
@@ -83,7 +90,7 @@ static void deck_arr_shuffle()
     }
 }
 
-static void deck_stack_dealloc()
+static void deck_stack_dealloc(struct DeckStack *deck_stack)
 {
     struct DeckStack *pivot = deck_stack;
     struct DeckStack *old;
@@ -97,9 +104,9 @@ static void deck_stack_dealloc()
     }
 }
 
-static void deck_stack_init()
+static struct DeckStack *deck_stack_init(struct Card **deck_arr)
 {
-    deck_stack = mmalloc(sizeof(struct DeckStack), "deck stack");
+    struct DeckStack *deck_stack = mmalloc(sizeof(struct DeckStack), "deck stack");
 
     struct DeckStack *pivot;
     struct Card *tmp;
@@ -116,4 +123,6 @@ static void deck_stack_init()
             pivot = pivot->next;
         }
     }
+
+    return deck_stack;
 }

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MMALLOC_H
+#define MMALLOC_H
 
 #include <stddef.h>
 
@@ -16,3 +17,4 @@ extern void *mmalloc(size_t size, unused const char *context);
 
 /* realloc and print allocated context and size */
 extern void *mrealloc(void *ptr, size_t size, unused const char *context);
+#endif

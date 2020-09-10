@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DEALER_H
+#define DEALER_H
 
 #include "player_game.h"
 
@@ -8,10 +9,14 @@
 
 #define MAX_CARDS_FOR_DOUBLE 2
 
-void dealer_add_player_game(struct PlayerGame *player_game);
+struct Dealer;
 
-void dealer_init();
+void dealer_add_player_game(struct Dealer *, struct PlayerGame *);
 
-void dealer_play();
+struct Dealer *dealer_init();
 
-void dealer_print_initial_cards();
+void dealer_play(struct Dealer *);
+
+void dealer_print_initial_cards(struct Dealer *);
+
+#endif

@@ -5,8 +5,8 @@
 
 int main()
 {
-    dealer_init();
-    dealer_play();
+    struct Dealer *dealer = dealer_init();
+    dealer_play(dealer);
 
 #ifdef DEBUG
     registry_print_alloc();
