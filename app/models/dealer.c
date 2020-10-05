@@ -26,13 +26,12 @@ struct Dealer
     struct PlayerGame *player_game;
 };
 
-static void calc_final_results(struct Dealer *, struct PlayerGame *);
+static bool calc_final_results(struct Dealer *, struct PlayerGame *);
 static void dealloc(struct Dealer *);
 static void dealloc_drawn_cards(struct Dealer *);
 static void dealloc_player_game(struct Dealer *);
 static void draw_card(struct Dealer *, struct Card *);
 static void init_players(struct Dealer *);
-
 #ifndef DEBUG
 static int show_options(struct PlayerGame *player_game);
 #endif
@@ -53,6 +52,12 @@ void dealer_add_player_game(struct Dealer *dealer, struct PlayerGame *player_gam
     // player draw first 2 cards
     player_draw_card(player_game->player, deck_draw_card(dealer->deck));
     player_draw_card(player_game->player, deck_draw_card(dealer->deck));
+}
+
+void dealer_dealloc(struct Dealer *dealer)
+{
+    deck_dealloc(dealer->deck);
+    dealloc(dealer);
 }
 
 struct Dealer *dealer_init()
@@ -142,10 +147,17 @@ void dealer_play(struct Dealer *dealer)
     drawn_card_print(dealer->cards);
     printf("Total dealer score: %u\n", drawn_card_total_score(dealer->cards));
 
-    calc_final_results(dealer, dealer->player_game);
+    pivot = dealer->player_game;
 
-    deck_dealloc(dealer->deck);
-    dealloc(dealer);
+    while (pivot != NULL)
+    {
+        if (calc_final_results(dealer, pivot))
+        {
+            player_win_amount(pivot->player, pivot->amount_bet * 2);
+        }
+
+        pivot = pivot->next;
+    }
 }
 
 void dealer_print_initial_cards(struct Dealer *dealer)
@@ -171,14 +183,17 @@ void dealer_print_initial_cards(struct Dealer *dealer)
     }
 }
 
-static void calc_final_results(struct Dealer *dealer, struct PlayerGame *player_game)
+static bool calc_final_results(struct Dealer *dealer, struct PlayerGame *player_game)
 {
+    bool win = false;
+
     if (player_total_score(player_game->player) > MAX_VALID_SCORE)
     {
         printf("%s loses, exceeds 21\n", player_name(player_game->player));
     }
     else if (drawn_card_total_score(dealer->cards) > MAX_VALID_SCORE)
     {
+        win = true;
         printf("%s wins, dealer exceeds 21\n", player_name(player_game->player));
     }
     else if (player_total_score(player_game->player) <= drawn_card_total_score(dealer->cards))
@@ -187,8 +202,11 @@ static void calc_final_results(struct Dealer *dealer, struct PlayerGame *player_
     }
     else
     {
+        win = true;
         printf("%s wins\n", player_name(player_game->player));
     }
+
+    return win;
 }
 
 static void dealloc(struct Dealer *dealer)
@@ -233,15 +251,22 @@ static void init_players(struct Dealer *dealer)
 {
     char *player_name = mmalloc(50 * sizeof(char), "player name");
 
-#ifndef DEBUG
+#ifdef DEBUG
+    char *tmpName = "John";
+    memcpy(player_name, tmpName, strlen(tmpName) + 1);
+#else
     printf("\nInsert player name: ");
     scanf("%s", player_name);
     printf("\n");
-#else
-    memcpy(player_name, "John", 4);
 #endif
 
-    dealer_add_player_game(dealer, player_game_init(player_init_with_name(player_name), false));
+    struct Player *player = player_init_with_name(player_name);
+    player_bet_amount(player, 10);
+
+    struct PlayerGame *player_game = player_game_init(player, false);
+    player_game->amount_bet = 10;
+
+    dealer_add_player_game(dealer, player_game);
 }
 
 #ifndef DEBUG

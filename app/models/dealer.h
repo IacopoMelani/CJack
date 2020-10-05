@@ -13,6 +13,8 @@ struct Dealer;
 
 void dealer_add_player_game(struct Dealer *, struct PlayerGame *);
 
+void dealer_dealloc(struct Dealer *);
+
 struct Dealer *dealer_init();
 
 void dealer_play(struct Dealer *);

@@ -4,7 +4,7 @@
 
 void clear_screen()
 {
-#ifndef DEBUG
+#ifdef RELEASE
 #ifdef __linux__
     system("clear");
 #elif _WIN32
