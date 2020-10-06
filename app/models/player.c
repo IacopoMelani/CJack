@@ -30,6 +30,16 @@ bool player_bet_amount(struct Player *player, unsigned int amount)
     return true;
 }
 
+bool player_can_bet(struct Player *player, unsigned int amount)
+{
+    if (player->bank_account < amount)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 void player_dealloc(struct Player *player)
 {
     struct DrawnCard *pivot, *old_node;

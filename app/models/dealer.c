@@ -261,7 +261,31 @@ static void init_players(struct Dealer *dealer)
 #endif
 
     struct Player *player = player_init_with_name(player_name);
-    player_bet_amount(player, 10);
+    unsigned int amount_bet;
+
+#ifdef DEBUG
+    amount_bet = 10;
+#else
+    bool valid = false;
+    do
+    {
+        printf("\nInsert amount bet: ");
+        scanf("%u", &amount_bet);
+
+        if (player_can_bet(player, amount_bet))
+        {
+            valid = true;
+        }
+        else
+        {
+            clear_screen();
+            printf("\nCan't bet, you don't have the money to bet");
+        }
+
+    } while (!valid);
+#endif
+
+    player_bet_amount(player, amount_bet);
 
     struct PlayerGame *player_game = player_game_init(player, false);
     player_game->amount_bet = 10;
