@@ -26,14 +26,13 @@ struct Dealer
     struct PlayerGame *player_game;
 };
 
-static bool calc_final_results(struct Dealer *, struct PlayerGame *);
-static void dealloc(struct Dealer *);
-static void dealloc_drawn_cards(struct Dealer *);
-static void dealloc_player_game(struct Dealer *);
-static void draw_card(struct Dealer *, struct Card *);
-static void init_players(struct Dealer *);
+static bool dealer_calc_final_results(struct Dealer *, struct PlayerGame *);
+static void dealer_dealloc_drawn_cards(struct Dealer *);
+static void dealer_dealloc_player_game(struct Dealer *);
+static void dealer_draw_card(struct Dealer *, struct Card *);
+static void dealer_init_players(struct Dealer *);
 #ifndef DEBUG
-static int show_options(struct PlayerGame *player_game);
+static int dealer_show_options(struct PlayerGame *player_game);
 #endif
 
 void dealer_add_player_game(struct Dealer *dealer, struct PlayerGame *player_game)
@@ -57,7 +56,9 @@ void dealer_add_player_game(struct Dealer *dealer, struct PlayerGame *player_gam
 void dealer_dealloc(struct Dealer *dealer)
 {
     deck_dealloc(dealer->deck);
-    dealloc(dealer);
+    dealer_dealloc_drawn_cards(dealer);
+    dealer_dealloc_player_game(dealer);
+    mfree(dealer, CONTEXT_DEALER);
 }
 
 struct Dealer *dealer_init()
@@ -71,10 +72,10 @@ struct Dealer *dealer_init()
     dealer->deck = deck_init();
 
     // dealer draw first 2 cards
-    draw_card(dealer, deck_draw_card(dealer->deck));
-    draw_card(dealer, deck_draw_card(dealer->deck));
+    dealer_draw_card(dealer, deck_draw_card(dealer->deck));
+    dealer_draw_card(dealer, deck_draw_card(dealer->deck));
 
-    init_players(dealer);
+    dealer_init_players(dealer);
 
     return dealer;
 }
@@ -108,7 +109,7 @@ void dealer_play(struct Dealer *dealer)
             }
 #else
             int s;
-            s = show_options(pivot);
+            s = dealer_show_options(pivot);
             switch (s)
             {
             case card:
@@ -141,7 +142,7 @@ void dealer_play(struct Dealer *dealer)
     // dealer play
     while (drawn_card_total_score(dealer->cards) < MIN_SCORE_DEALER_STOP)
     {
-        draw_card(dealer, deck_draw_card(dealer->deck));
+        dealer_draw_card(dealer, deck_draw_card(dealer->deck));
     }
 
     drawn_card_print(dealer->cards);
@@ -151,7 +152,7 @@ void dealer_play(struct Dealer *dealer)
 
     while (pivot != NULL)
     {
-        if (calc_final_results(dealer, pivot))
+        if (dealer_calc_final_results(dealer, pivot))
         {
             player_win_amount(pivot->player, pivot->amount_bet * 2);
         }
@@ -183,7 +184,7 @@ void dealer_print_initial_cards(struct Dealer *dealer)
     }
 }
 
-static bool calc_final_results(struct Dealer *dealer, struct PlayerGame *player_game)
+static bool dealer_calc_final_results(struct Dealer *dealer, struct PlayerGame *player_game)
 {
     bool win = false;
 
@@ -209,14 +210,7 @@ static bool calc_final_results(struct Dealer *dealer, struct PlayerGame *player_
     return win;
 }
 
-static void dealloc(struct Dealer *dealer)
-{
-    dealloc_drawn_cards(dealer);
-    dealloc_player_game(dealer);
-    mfree(dealer, CONTEXT_DEALER);
-}
-
-static void dealloc_drawn_cards(struct Dealer *dealer)
+static void dealer_dealloc_drawn_cards(struct Dealer *dealer)
 {
     struct DrawnCard *pivot, *old_node;
 
@@ -229,7 +223,7 @@ static void dealloc_drawn_cards(struct Dealer *dealer)
     }
 }
 
-static void dealloc_player_game(struct Dealer *dealer)
+static void dealer_dealloc_player_game(struct Dealer *dealer)
 {
     struct PlayerGame *pivot, *old_node;
 
@@ -242,12 +236,12 @@ static void dealloc_player_game(struct Dealer *dealer)
     }
 }
 
-static void draw_card(struct Dealer *dealer, struct Card *card)
+static void dealer_draw_card(struct Dealer *dealer, struct Card *card)
 {
     drawn_card_push(&dealer->cards, card);
 }
 
-static void init_players(struct Dealer *dealer)
+static void dealer_init_players(struct Dealer *dealer)
 {
     char *player_name = mmalloc(50 * sizeof(char), "player name");
 
@@ -294,7 +288,7 @@ static void init_players(struct Dealer *dealer)
 }
 
 #ifndef DEBUG
-static int show_options(struct PlayerGame *player_game)
+static int dealer_show_options(struct PlayerGame *player_game)
 {
     int s;
 

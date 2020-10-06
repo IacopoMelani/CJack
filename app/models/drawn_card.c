@@ -7,15 +7,15 @@
 
 #define CONTEXT_DRAWN_CARD "drawn card"
 
-#define CHECK_VALID_SCORE(head)                               \
-    if (drawn_cards_total_score_raw(head) <= MAX_SCORE_LIMIT) \
-    {                                                         \
-        return;                                               \
+#define CHECK_VALID_SCORE(head)                              \
+    if (drawn_card_total_score_raw(head) <= MAX_SCORE_LIMIT) \
+    {                                                        \
+        return;                                              \
     }
 
 static void drawn_card_check_aces(struct DrawnCard *head);
 static struct DrawnCard *drawn_card_init();
-static unsigned int drawn_cards_total_score_raw(struct DrawnCard *head);
+static unsigned int drawn_card_total_score_raw(struct DrawnCard *head);
 
 bool drawn_card_check_blackjack(struct DrawnCard *head)
 {
@@ -97,7 +97,7 @@ unsigned int drawn_card_total_cards(struct DrawnCard *head)
 unsigned int drawn_card_total_score(struct DrawnCard *head)
 {
     drawn_card_check_aces(head);
-    return drawn_cards_total_score_raw(head);
+    return drawn_card_total_score_raw(head);
 }
 
 static void drawn_card_check_aces(struct DrawnCard *head)
@@ -133,7 +133,7 @@ static struct DrawnCard *drawn_card_init()
     return node;
 }
 
-static unsigned int drawn_cards_total_score_raw(struct DrawnCard *head)
+static unsigned int drawn_card_total_score_raw(struct DrawnCard *head)
 {
     struct DrawnCard *pivot;
     unsigned int score = 0;
