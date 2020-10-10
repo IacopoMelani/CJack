@@ -6,7 +6,7 @@
 int main()
 {
     clear_screen();
-    struct Dealer *dealer = dealer_init();
+    DEALER dealer = dealer_init();
     dealer_play(dealer);
     dealer_dealloc(dealer);
 

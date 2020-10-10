@@ -118,7 +118,7 @@ static struct RegistryAlloc *add_registry_alloc(struct RegistryAlloc *registry, 
 
 static struct RegistryAlloc *create_registy_alloc(size_t size, void *mem_alloc_ptr, const char *context)
 {
-    struct RegistryAlloc *registry = (struct RegistryAlloc *)malloc(sizeof(struct RegistryAlloc));
+    struct RegistryAlloc *registry = malloc(sizeof(struct RegistryAlloc));
     if (registry != NULL)
     {
         registry->context = context;

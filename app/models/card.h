@@ -12,21 +12,23 @@ extern size_t allValue_count;
 extern size_t allSeeds_count;
 extern size_t allSymbols_count;
 
-struct Card
+typedef struct Card
 {
     unsigned int value;
     const char *symbol;
     const char *seed;
-};
+} Card;
 
-void card_dealloc(struct Card *card);
+typedef Card *CARD;
 
-struct Card *card_init(unsigned int svalue, const char *symbol, const char *seed);
+void card_dealloc(CARD card);
 
-bool card_is_ace(struct Card *card);
+CARD card_init(unsigned int svalue, const char *symbol, const char *seed);
 
-void card_print(struct Card *card);
+bool card_is_ace(CARD card);
 
-void card_sprintf(char *buf, struct Card *card);
+void card_print(CARD card);
+
+void card_sprintf(char *buf, CARD card);
 
 #endif

@@ -13,11 +13,11 @@
         return;                                              \
     }
 
-static void drawn_card_check_aces(struct DrawnCard *head);
-static struct DrawnCard *drawn_card_init();
-static unsigned int drawn_card_total_score_raw(struct DrawnCard *head);
+static void drawn_card_check_aces(DRAWN_CARD head);
+static DRAWN_CARD drawn_card_init();
+static unsigned int drawn_card_total_score_raw(DRAWN_CARD head);
 
-bool drawn_card_check_blackjack(struct DrawnCard *head)
+bool drawn_card_check_blackjack(DRAWN_CARD head)
 {
     if (drawn_card_total_score(head) == MAX_SCORE_LIMIT && drawn_card_len(head) == CARD_LEN_TO_BLACKJACK)
     {
@@ -27,16 +27,16 @@ bool drawn_card_check_blackjack(struct DrawnCard *head)
     return false;
 }
 
-void drawn_card_dealloc(struct DrawnCard *drawn_card)
+void drawn_card_dealloc(DRAWN_CARD drawn_card)
 {
     card_dealloc(drawn_card->card);
     mfree(drawn_card, CONTEXT_DRAWN_CARD);
 }
 
-unsigned int drawn_card_len(struct DrawnCard *head)
+unsigned int drawn_card_len(DRAWN_CARD head)
 {
     unsigned int len;
-    struct DrawnCard *pivot;
+    DRAWN_CARD pivot;
 
     pivot = head;
 
@@ -49,9 +49,9 @@ unsigned int drawn_card_len(struct DrawnCard *head)
     return len;
 }
 
-void drawn_card_print(struct DrawnCard *drawn_card)
+void drawn_card_print(DRAWN_CARD drawn_card)
 {
-    struct DrawnCard *pivot;
+    DRAWN_CARD pivot;
 
     pivot = drawn_card;
     while (pivot != NULL)
@@ -61,10 +61,10 @@ void drawn_card_print(struct DrawnCard *drawn_card)
     }
 }
 
-void drawn_card_push(struct DrawnCard **head, struct Card *card)
+void drawn_card_push(DRAWN_CARD *head, CARD card)
 {
-    struct DrawnCard **pivot;
-    struct DrawnCard *node = NULL;
+    DRAWN_CARD *pivot;
+    DRAWN_CARD node = NULL;
 
     node = drawn_card_init();
     node->card = card;
@@ -78,9 +78,9 @@ void drawn_card_push(struct DrawnCard **head, struct Card *card)
     *pivot = node;
 }
 
-unsigned int drawn_card_total_cards(struct DrawnCard *head)
+unsigned int drawn_card_total_cards(DRAWN_CARD head)
 {
-    struct DrawnCard *pivot;
+    DRAWN_CARD pivot;
 
     unsigned int tot = 0;
 
@@ -94,18 +94,18 @@ unsigned int drawn_card_total_cards(struct DrawnCard *head)
     return tot;
 }
 
-unsigned int drawn_card_total_score(struct DrawnCard *head)
+unsigned int drawn_card_total_score(DRAWN_CARD head)
 {
     drawn_card_check_aces(head);
     return drawn_card_total_score_raw(head);
 }
 
-static void drawn_card_check_aces(struct DrawnCard *head)
+static void drawn_card_check_aces(DRAWN_CARD head)
 {
     CHECK_VALID_SCORE(head);
 
-    struct DrawnCard *
-        pivot;
+    DRAWN_CARD
+    pivot;
 
     pivot = head;
     while (pivot != NULL)
@@ -121,9 +121,9 @@ static void drawn_card_check_aces(struct DrawnCard *head)
     }
 }
 
-static struct DrawnCard *drawn_card_init()
+static DRAWN_CARD drawn_card_init()
 {
-    struct DrawnCard *node = NULL;
+    DRAWN_CARD node = NULL;
     node = mmalloc(sizeof(struct DrawnCard), CONTEXT_DRAWN_CARD);
     if (node != NULL)
     {
@@ -133,9 +133,9 @@ static struct DrawnCard *drawn_card_init()
     return node;
 }
 
-static unsigned int drawn_card_total_score_raw(struct DrawnCard *head)
+static unsigned int drawn_card_total_score_raw(DRAWN_CARD head)
 {
-    struct DrawnCard *pivot;
+    DRAWN_CARD pivot;
     unsigned int score = 0;
 
     pivot = head;

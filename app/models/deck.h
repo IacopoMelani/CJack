@@ -5,10 +5,12 @@
 
 #define DECK_LEN 52
 
-struct Deck;
+typedef struct Deck Deck;
 
-void deck_dealloc(struct Deck *);
-struct Card *deck_draw_card(struct Deck *);
-struct Deck *deck_init();
+typedef Deck *DECK;
+
+void deck_dealloc(DECK);
+CARD deck_draw_card(DECK);
+DECK deck_init();
 
 #endif

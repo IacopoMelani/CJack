@@ -5,18 +5,20 @@
 #include "card.h"
 #include "../../libs/mmalloc/types/types.h"
 
-struct PlayerGame
+typedef struct PlayerGame
 {
-    struct Player *player;
+    PLAYER player;
     unsigned int amount_bet;
     bool is_cpu;
     struct PlayerGame *next;
-};
+} PlayerGame;
 
-void player_game_dealloc(struct PlayerGame *player_game);
+typedef PlayerGame *PLAYER_GAME;
 
-void player_game_drawn_card(struct PlayerGame *player_game, struct Card *card);
+void player_game_dealloc(PLAYER_GAME player_game);
 
-struct PlayerGame *player_game_init(struct Player *player, bool is_cpu);
+void player_game_drawn_card(PLAYER_GAME player_game, CARD card);
+
+PLAYER_GAME player_game_init(PLAYER player, bool is_cpu);
 
 #endif

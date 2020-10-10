@@ -9,16 +9,18 @@
 
 #define MAX_CARDS_FOR_DOUBLE 2
 
-struct Dealer;
+typedef struct Dealer Dealer;
 
-void dealer_add_player_game(struct Dealer *, struct PlayerGame *);
+typedef Dealer *DEALER;
 
-void dealer_dealloc(struct Dealer *);
+void dealer_add_player_game(DEALER, PLAYER_GAME);
 
-struct Dealer *dealer_init();
+void dealer_dealloc(DEALER);
 
-void dealer_play(struct Dealer *);
+DEALER dealer_init();
 
-void dealer_print_initial_cards(struct Dealer *);
+void dealer_play(DEALER);
+
+void dealer_print_initial_cards(DEALER);
 
 #endif

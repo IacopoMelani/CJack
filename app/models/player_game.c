@@ -4,20 +4,20 @@
 
 #define CONTEXT_PLAYER_GAME "player game"
 
-void player_game_dealloc(struct PlayerGame *player_game)
+void player_game_dealloc(PLAYER_GAME player_game)
 {
     player_dealloc(player_game->player);
     mfree(player_game, CONTEXT_PLAYER_GAME);
 }
 
-void player_game_drawn_card(struct PlayerGame *player_game, struct Card *card)
+void player_game_drawn_card(PLAYER_GAME player_game, CARD card)
 {
     player_draw_card(player_game->player, card);
 }
 
-struct PlayerGame *player_game_init(struct Player *player, bool is_cpu)
+PLAYER_GAME player_game_init(PLAYER player, bool is_cpu)
 {
-    struct PlayerGame *player_game = mmalloc(sizeof(struct PlayerGame), CONTEXT_PLAYER_GAME);
+    PLAYER_GAME player_game = mmalloc(sizeof(struct PlayerGame), CONTEXT_PLAYER_GAME);
 
     if (player_game != NULL)
     {

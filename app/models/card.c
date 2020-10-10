@@ -21,19 +21,19 @@ size_t allValue_count = NELEMS(allValue);
 size_t allSeeds_count = NELEMS(allSeeds);
 size_t allSymbols_count = NELEMS(allSymbols);
 
-void card_dealloc(struct Card *card)
+void card_dealloc(CARD card)
 {
     char buf[80];
     card_sprintf(buf, card);
     mfree(card, buf);
 }
 
-struct Card *card_init(unsigned int value, const char *symbol, const char *seed)
+CARD card_init(unsigned int value, const char *symbol, const char *seed)
 {
     char buf[80];
     struct Card bufCard = {.seed = seed, .value = value, .symbol = symbol};
     card_sprintf(buf, &bufCard);
-    struct Card *c = (struct Card *)mmalloc(sizeof(struct Card), buf);
+    CARD c = mmalloc(sizeof(struct Card), buf);
     if (c == NULL)
     {
         return NULL;
@@ -46,7 +46,7 @@ struct Card *card_init(unsigned int value, const char *symbol, const char *seed)
     return c;
 }
 
-bool card_is_ace(struct Card *card)
+bool card_is_ace(CARD card)
 {
     if (strcmp(card->symbol, SYMBOL_ACE) == 0)
     {
@@ -56,12 +56,12 @@ bool card_is_ace(struct Card *card)
     return false;
 }
 
-void card_print(struct Card *card)
+void card_print(CARD card)
 {
     printf("%s of %s\n", card->symbol, card->seed);
 }
 
-void card_sprintf(char *buf, struct Card *card)
+void card_sprintf(char *buf, CARD card)
 {
     sprintf(buf, "%s of %s", card->symbol, card->seed);
 }

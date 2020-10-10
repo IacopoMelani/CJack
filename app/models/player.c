@@ -12,13 +12,13 @@
 struct Player
 {
     char *name;
-    struct DrawnCard *cards;
+    DRAWN_CARD cards;
     unsigned int bank_account;
 };
 
-static void player_sprintf(char *buf, struct Player *player);
+static void player_sprintf(char *buf, PLAYER player);
 
-bool player_bet_amount(struct Player *player, unsigned int amount)
+bool player_bet_amount(PLAYER player, unsigned int amount)
 {
     if (player->bank_account < amount)
     {
@@ -30,7 +30,7 @@ bool player_bet_amount(struct Player *player, unsigned int amount)
     return true;
 }
 
-bool player_can_bet(struct Player *player, unsigned int amount)
+bool player_can_bet(PLAYER player, unsigned int amount)
 {
     if (player->bank_account < amount)
     {
@@ -40,9 +40,9 @@ bool player_can_bet(struct Player *player, unsigned int amount)
     return true;
 }
 
-void player_dealloc(struct Player *player)
+void player_dealloc(PLAYER player)
 {
-    struct DrawnCard *pivot, *old_node;
+    DRAWN_CARD pivot, old_node;
 
     pivot = player->cards;
     while (pivot != NULL)
@@ -57,14 +57,14 @@ void player_dealloc(struct Player *player)
     mfree(player, buf);
 }
 
-void player_draw_card(struct Player *player, struct Card *card)
+void player_draw_card(PLAYER player, CARD card)
 {
     drawn_card_push(&player->cards, card);
 }
 
-struct Player *player_init_with_name(char *name)
+PLAYER player_init_with_name(char *name)
 {
-    struct Player *player = mmalloc(sizeof(struct Player), CONTEXT_PLAYER);
+    PLAYER player = mmalloc(sizeof(struct Player), CONTEXT_PLAYER);
 
     player->bank_account = INITIAL_BANK_ACCOUNT;
     player->cards = NULL;
@@ -73,37 +73,37 @@ struct Player *player_init_with_name(char *name)
     return player;
 }
 
-char *player_name(struct Player *player)
+char *player_name(PLAYER player)
 {
     return player->name;
 }
 
-void player_print_cards(struct Player *player)
+void player_print_cards(PLAYER player)
 {
     drawn_card_print(player->cards);
 }
 
-unsigned int player_stand(struct Player *player)
+unsigned int player_stand(PLAYER player)
 {
     return player_total_score(player);
 }
 
-unsigned int player_total_cards(struct Player *player)
+unsigned int player_total_cards(PLAYER player)
 {
     return drawn_card_total_cards(player->cards);
 }
 
-unsigned int player_total_score(struct Player *player)
+unsigned int player_total_score(PLAYER player)
 {
     return drawn_card_total_score(player->cards);
 }
 
-void player_win_amount(struct Player *player, unsigned int amount)
+void player_win_amount(PLAYER player, unsigned int amount)
 {
     player->bank_account += amount;
 }
 
-static void player_sprintf(char *buf, struct Player *player)
+static void player_sprintf(char *buf, PLAYER player)
 {
     sprintf(buf, "Player name: %s, bank account: %u", player->name, player->bank_account);
 }
