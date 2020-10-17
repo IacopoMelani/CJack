@@ -42,6 +42,15 @@ bool player_can_bet(PLAYER player, unsigned int amount)
 
 void player_dealloc(PLAYER player)
 {
+    player_dealloc_drawn_cards(player);
+    char buf[80];
+    player_sprintf(buf, player);
+    mfree(player->name, "player name");
+    mfree(player, buf);
+}
+
+void player_dealloc_drawn_cards(PLAYER player)
+{
     DRAWN_CARD pivot, old_node;
 
     pivot = player->cards;
@@ -51,10 +60,8 @@ void player_dealloc(PLAYER player)
         pivot = pivot->next;
         drawn_card_dealloc(old_node);
     }
-    char buf[80];
-    player_sprintf(buf, player);
-    mfree(player->name, "player name");
-    mfree(player, buf);
+
+    player->cards = NULL;
 }
 
 void player_draw_card(PLAYER player, CARD card)

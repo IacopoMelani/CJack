@@ -12,6 +12,8 @@ bool player_can_bet(PLAYER player, unsigned int amount);
 
 void player_dealloc(PLAYER player);
 
+void player_dealloc_drawn_cards(PLAYER player);
+
 void player_draw_card(PLAYER player, CARD card);
 
 PLAYER player_init_with_name(char *name);

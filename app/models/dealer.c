@@ -56,9 +56,11 @@ enum options
 #endif
 
 static bool dealer_calc_final_results(DEALER, PLAYER_GAME);
+static void dealer_dealloc_deck(DEALER);
 static void dealer_dealloc_drawn_cards(DEALER);
 static void dealer_dealloc_player_game(DEALER);
 static void dealer_draw_card(DEALER, CARD);
+static void dealer_final(DEALER);
 static void dealer_init_players(DEALER);
 #ifndef DEBUG
 static int dealer_show_options(PLAYER_GAME player_game);
@@ -161,19 +163,10 @@ void dealer_play(DEALER dealer)
     drawn_card_print(dealer->cards);
     printf("Total dealer score: %u\n", drawn_card_total_score(dealer->cards));
 
-    pivot = dealer->player_game;
+    dealer_final(dealer);
 
-    while (pivot != NULL)
-    {
-        if (dealer_calc_final_results(dealer, pivot))
-        {
-            player_win_amount(pivot->player, pivot->amount_bet * 2);
-        }
-
-        pivot = pivot->next;
-    }
-
-    deck_dealloc(dealer->deck);
+    dealer_dealloc_drawn_cards(dealer);
+    dealer_dealloc_deck(dealer);
 }
 
 void dealer_print_initial_cards(DEALER dealer)
@@ -225,6 +218,12 @@ static bool dealer_calc_final_results(DEALER dealer, PLAYER_GAME player_game)
     return win;
 }
 
+static void dealer_dealloc_deck(DEALER dealer)
+{
+    deck_dealloc(dealer->deck);
+    dealer->deck = NULL;
+}
+
 static void dealer_dealloc_drawn_cards(DEALER dealer)
 {
     DRAWN_CARD pivot, old_node;
@@ -236,6 +235,8 @@ static void dealer_dealloc_drawn_cards(DEALER dealer)
         pivot = pivot->next;
         drawn_card_dealloc(old_node);
     }
+
+    dealer->cards = NULL;
 }
 
 static void dealer_dealloc_player_game(DEALER dealer)
@@ -254,6 +255,25 @@ static void dealer_dealloc_player_game(DEALER dealer)
 static void dealer_draw_card(DEALER dealer, CARD card)
 {
     drawn_card_push(&dealer->cards, card);
+}
+
+static void dealer_final(DEALER dealer)
+{
+    PLAYER_GAME pivot;
+
+    pivot = dealer->player_game;
+
+    while (pivot != NULL)
+    {
+        if (dealer_calc_final_results(dealer, pivot))
+        {
+            player_win_amount(pivot->player, pivot->amount_bet * 2);
+        }
+
+        player_dealloc_drawn_cards(pivot->player);
+
+        pivot = pivot->next;
+    }
 }
 
 static void dealer_init_players(DEALER dealer)
