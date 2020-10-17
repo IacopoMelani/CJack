@@ -12,12 +12,48 @@
 
 #define CONTEXT_DEALER "dealer"
 
+#define DEALER_DRAW_INITIAL_CARS(dealer, deck)      \
+    dealer_draw_card(dealer, deck_draw_card(deck)); \
+    dealer_draw_card(dealer, deck_draw_card(deck));
+
+#define PLAYER_DRAW_INITIAL_CARDS(player, deck)     \
+    player_draw_card(player, deck_draw_card(deck)); \
+    player_draw_card(player, deck_draw_card(deck));
+
+#ifndef DEBUG
+#define DOUBLE_DOWN(player, deck)                           \
+    if (player_total_cards(player) <= MAX_CARDS_FOR_DOUBLE) \
+    {                                                       \
+        player_draw_card(player, deck_draw_card(deck));     \
+        stop = true;                                        \
+    }
+#else
+#define PLAY_DEBUG(player, deck)                            \
+    if (player_total_score(player) < MIN_SCORE_DEALER_STOP) \
+    {                                                       \
+        player_draw_card(player, deck_draw_card(deck));     \
+    }                                                       \
+    else                                                    \
+    {                                                       \
+        stop = true;                                        \
+    }
+#endif
+
 struct Dealer
 {
     DECK deck;
     DRAWN_CARD cards;
     PLAYER_GAME player_game;
 };
+
+#ifndef DEBUG
+enum options
+{
+    card = 1,
+    stand,
+    double_down
+};
+#endif
 
 static bool dealer_calc_final_results(DEALER, PLAYER_GAME);
 static void dealer_dealloc_drawn_cards(DEALER);
@@ -26,23 +62,6 @@ static void dealer_draw_card(DEALER, CARD);
 static void dealer_init_players(DEALER);
 #ifndef DEBUG
 static int dealer_show_options(PLAYER_GAME player_game);
-
-enum options
-{
-    card = 1,
-    stand,
-    double_down
-};
-#else
-#define PLAY_DEBUG                                                     \
-    if (player_total_score(pivot->player) < MIN_SCORE_DEALER_STOP)     \
-    {                                                                  \
-        player_draw_card(pivot->player, deck_draw_card(dealer->deck)); \
-    }                                                                  \
-    else                                                               \
-    {                                                                  \
-        stop = true;                                                   \
-    }
 #endif
 
 void dealer_add_player_game(DEALER dealer, PLAYER_GAME player_game)
@@ -57,15 +76,10 @@ void dealer_add_player_game(DEALER dealer, PLAYER_GAME player_game)
     }
 
     *pivot = player_game;
-
-    // player draw first 2 cards
-    player_draw_card(player_game->player, deck_draw_card(dealer->deck));
-    player_draw_card(player_game->player, deck_draw_card(dealer->deck));
 }
 
 void dealer_dealloc(DEALER dealer)
 {
-    deck_dealloc(dealer->deck);
     dealer_dealloc_drawn_cards(dealer);
     dealer_dealloc_player_game(dealer);
     mfree(dealer, CONTEXT_DEALER);
@@ -74,16 +88,10 @@ void dealer_dealloc(DEALER dealer)
 DEALER dealer_init()
 {
 
-    DEALER dealer = mmalloc(sizeof(struct Dealer), CONTEXT_DEALER);
+    DEALER dealer = mmalloc(sizeof(Dealer), CONTEXT_DEALER);
 
     dealer->cards = NULL;
     dealer->player_game = NULL;
-
-    dealer->deck = deck_init();
-
-    // dealer draw first 2 cards
-    dealer_draw_card(dealer, deck_draw_card(dealer->deck));
-    dealer_draw_card(dealer, deck_draw_card(dealer->deck));
 
     dealer_init_players(dealer);
 
@@ -94,6 +102,10 @@ void dealer_play(DEALER dealer)
 {
     PLAYER_GAME pivot;
 
+    dealer->deck = deck_init();
+
+    DEALER_DRAW_INITIAL_CARS(dealer, dealer->deck);
+
     pivot = dealer->player_game;
 
     // player play
@@ -103,13 +115,15 @@ void dealer_play(DEALER dealer)
 
         printf("%s it's your turn!\n", player_name(pivot->player));
 
+        PLAYER_DRAW_INITIAL_CARDS(pivot->player, dealer->deck);
+
         while (!stop && player_total_score(pivot->player) < MAX_VALID_SCORE)
         {
             clear_screen();
             player_print_cards(pivot->player);
             printf("Actual player score: %u\n", player_total_score(pivot->player));
 #ifdef DEBUG
-            PLAY_DEBUG
+            PLAY_DEBUG(pivot->player, dealer->deck);
 #else
             int s;
             s = dealer_show_options(pivot);
@@ -119,11 +133,7 @@ void dealer_play(DEALER dealer)
                 player_draw_card(pivot->player, deck_draw_card(dealer->deck));
                 break;
             case double_down:
-                if (player_total_cards(pivot->player) <= MAX_CARDS_FOR_DOUBLE)
-                {
-                    player_draw_card(pivot->player, deck_draw_card(dealer->deck));
-                    stop = true;
-                }
+                DOUBLE_DOWN(pivot->player, dealer->deck);
                 break;
             case stand:
                 stop = true;
@@ -162,6 +172,8 @@ void dealer_play(DEALER dealer)
 
         pivot = pivot->next;
     }
+
+    deck_dealloc(dealer->deck);
 }
 
 void dealer_print_initial_cards(DEALER dealer)
@@ -193,21 +205,21 @@ static bool dealer_calc_final_results(DEALER dealer, PLAYER_GAME player_game)
 
     if (player_total_score(player_game->player) > MAX_VALID_SCORE)
     {
-        printf("%s loses, exceeds 21\n", player_name(player_game->player));
+        printf("%s loses %u$, exceeds 21\n", player_name(player_game->player), player_game->amount_bet);
     }
     else if (drawn_card_total_score(dealer->cards) > MAX_VALID_SCORE)
     {
         win = true;
-        printf("%s wins, dealer exceeds 21\n", player_name(player_game->player));
+        printf("%s wins %u$, dealer exceeds 21\n", player_name(player_game->player), player_game->amount_bet);
     }
     else if (player_total_score(player_game->player) <= drawn_card_total_score(dealer->cards))
     {
-        printf("%s loses, dealer wins\n", player_name(player_game->player));
+        printf("%s loses %u$, dealer wins\n", player_name(player_game->player), player_game->amount_bet);
     }
     else
     {
         win = true;
-        printf("%s wins\n", player_name(player_game->player));
+        printf("%s wins %u$ \n", player_name(player_game->player), player_game->amount_bet);
     }
 
     return win;
@@ -246,6 +258,7 @@ static void dealer_draw_card(DEALER dealer, CARD card)
 
 static void dealer_init_players(DEALER dealer)
 {
+    // for now inits one player
     char *player_name = mmalloc(50 * sizeof(char), "player name");
 
 #ifdef DEBUG

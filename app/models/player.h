@@ -27,4 +27,3 @@ unsigned int player_total_cards(PLAYER player);
 unsigned int player_total_score(PLAYER player);
 
 void player_win_amount(PLAYER player, unsigned int amount);
-
