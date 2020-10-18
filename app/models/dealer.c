@@ -63,6 +63,9 @@ static void dealer_draw_card(DEALER, CARD);
 static void dealer_final(DEALER);
 static void dealer_init_players(DEALER);
 static void dealer_init_player_game_bets(DEALER);
+static void dealer_play_players(DEALER);
+static void dealer_play_player_game(DEALER, PLAYER_GAME);
+static void dealer_play_self(DEALER);
 #ifndef DEBUG
 static int dealer_show_options(const PLAYER_GAME player_game);
 #endif
@@ -103,73 +106,46 @@ DEALER dealer_init()
 
 void dealer_play(DEALER dealer)
 {
-    PLAYER_GAME pivot;
-
     dealer->deck = deck_init();
 
     dealer_init_player_game_bets(dealer);
 
     DEALER_DRAW_INITIAL_CARS(dealer, dealer->deck);
 
-    pivot = dealer->player_game;
-
-    // player play
-    while (pivot != NULL)
-    {
-        bool stop = false;
-
-        printf("%s it's your turn!\n", player_name(pivot->player));
-
-        PLAYER_DRAW_INITIAL_CARDS(pivot->player, dealer->deck);
-
-        while (!stop && player_total_score(pivot->player) < MAX_VALID_SCORE)
-        {
-            clear_screen();
-            player_print_cards(pivot->player);
-            printf("Actual player score: %u\n", player_total_score(pivot->player));
-#ifdef DEBUG
-            PLAY_DEBUG(pivot->player, dealer->deck);
-#else
-            int s;
-            s = dealer_show_options(pivot);
-            switch (s)
-            {
-            case card:
-                player_draw_card(pivot->player, deck_draw_card(dealer->deck));
-                break;
-            case double_down:
-                DOUBLE_DOWN(pivot->player, dealer->deck);
-                break;
-            case stand:
-                stop = true;
-                break;
-            default:
-                break;
-            }
-#endif
-        }
-        clear_screen();
-        player_print_cards(pivot->player);
-        printf("Total player score: %u\n", player_total_score(pivot->player));
-
-        pivot = pivot->next;
-    }
-
-    printf("\nIt's dealer turns\n");
+    // players play
+    dealer_play_players(dealer);
 
     // dealer play
-    while (drawn_card_total_score(dealer->cards) < MIN_SCORE_DEALER_STOP)
-    {
-        dealer_draw_card(dealer, deck_draw_card(dealer->deck));
-    }
-
+    printf("\nIt's dealer turns\n");
+    dealer_play_self(dealer);
     drawn_card_print(dealer->cards);
     printf("Total dealer score: %u\n", drawn_card_total_score(dealer->cards));
 
+    // calc final results and dealloc players drawn card
     dealer_final(dealer);
 
     dealer_dealloc_drawn_cards(dealer);
     dealer_dealloc_deck(dealer);
+}
+
+void dealer_print_game(DEALER dealer, PLAYER_GAME player_game, printGameOptions options)
+{
+    char *format;
+    switch (options)
+    {
+    case actual:
+        format = "Actual player score: %u\n";
+        break;
+    case total:
+    default:
+        format = "Total player score: %u\n";
+        break;
+    }
+    clear_screen();
+    dealer_print_initial_cards(dealer);
+    BREAK_LINE;
+    player_print_cards(player_game->player);
+    printf(format, player_total_score(player_game->player));
 }
 
 void dealer_print_initial_cards(const DEALER dealer)
@@ -332,6 +308,63 @@ static void dealer_init_player_game_bets(DEALER dealer)
         pivot->amount_bet = amount_bet;
 
         pivot = pivot->next;
+    }
+}
+
+static void dealer_play_players(DEALER dealer)
+{
+    PLAYER_GAME pivot;
+
+    pivot = dealer->player_game;
+
+    while (pivot != NULL)
+    {
+        dealer_play_player_game(dealer, pivot);
+        dealer_print_game(dealer, pivot, total);
+
+        pivot = pivot->next;
+    }
+}
+
+static void dealer_play_player_game(DEALER dealer, PLAYER_GAME player_game)
+{
+    bool stop = false;
+
+    printf("%s it's your turn!\n", player_name(player_game->player));
+
+    PLAYER_DRAW_INITIAL_CARDS(player_game->player, dealer->deck);
+
+    while (!stop && player_total_score(player_game->player) < MAX_VALID_SCORE)
+    {
+        dealer_print_game(dealer, player_game, actual);
+#ifdef DEBUG
+        PLAY_DEBUG(player_game->player, dealer->deck);
+#else
+        int s;
+        s = dealer_show_options(player_game);
+        switch (s)
+        {
+        case card:
+            player_draw_card(player_game->player, deck_draw_card(dealer->deck));
+            break;
+        case double_down:
+            DOUBLE_DOWN(player_game->player, dealer->deck);
+            break;
+        case stand:
+            stop = true;
+            break;
+        default:
+            break;
+        }
+#endif
+    }
+}
+
+static void dealer_play_self(DEALER dealer)
+{
+    while (drawn_card_total_score(dealer->cards) < MIN_SCORE_DEALER_STOP)
+    {
+        dealer_draw_card(dealer, deck_draw_card(dealer->deck));
     }
 }
 

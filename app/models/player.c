@@ -80,7 +80,7 @@ PLAYER player_init_with_name(char *name)
     return player;
 }
 
-inline char *player_name(const PLAYER player)
+char *player_name(const PLAYER player)
 {
     return player->name;
 }

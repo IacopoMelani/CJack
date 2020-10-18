@@ -9,6 +9,12 @@
 
 #define MAX_CARDS_FOR_DOUBLE 2
 
+typedef enum
+{
+    actual,
+    total
+} printGameOptions;
+
 typedef struct Dealer Dealer;
 
 typedef Dealer *DEALER;
@@ -20,6 +26,8 @@ void dealer_dealloc(DEALER);
 DEALER dealer_init();
 
 void dealer_play(DEALER);
+
+void dealer_print_game(DEALER, PLAYER_GAME, printGameOptions);
 
 void dealer_print_initial_cards(const DEALER);
 

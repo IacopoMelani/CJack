@@ -34,10 +34,6 @@ CARD card_init(unsigned int value, const char *symbol, const char *seed)
     struct Card bufCard = {.seed = seed, .value = value, .symbol = symbol};
     card_sprintf(buf, &bufCard);
     CARD c = mmalloc(sizeof(struct Card), buf);
-    if (c == NULL)
-    {
-        return NULL;
-    }
 
     c->value = value;
     c->symbol = symbol;
@@ -48,12 +44,14 @@ CARD card_init(unsigned int value, const char *symbol, const char *seed)
 
 bool card_is_ace(const CARD card)
 {
+    bool valid = false;
+
     if (strcmp(card->symbol, SYMBOL_ACE) == 0)
     {
-        return true;
+        valid = true;
     }
 
-    return false;
+    return valid;
 }
 
 void card_print(const CARD card)
