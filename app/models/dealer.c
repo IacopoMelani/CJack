@@ -20,14 +20,7 @@
     player_draw_card(player, deck_draw_card(deck)); \
     player_draw_card(player, deck_draw_card(deck));
 
-#ifndef DEBUG
-#define DOUBLE_DOWN(player, deck)                           \
-    if (player_total_cards(player) <= MAX_CARDS_FOR_DOUBLE) \
-    {                                                       \
-        player_draw_card(player, deck_draw_card(deck));     \
-        stop = true;                                        \
-    }
-#else
+#ifdef DEBUG
 #define PLAY_DEBUG(player, deck)                            \
     if (player_total_score(player) < MIN_SCORE_DEALER_STOP) \
     {                                                       \
@@ -35,6 +28,13 @@
     }                                                       \
     else                                                    \
     {                                                       \
+        stop = true;                                        \
+    }
+#else
+#define DOUBLE_DOWN(player, deck)                           \
+    if (player_total_cards(player) <= MAX_CARDS_FOR_DOUBLE) \
+    {                                                       \
+        player_draw_card(player, deck_draw_card(deck));     \
         stop = true;                                        \
     }
 #endif
@@ -55,7 +55,7 @@ enum options
 };
 #endif
 
-static bool dealer_calc_final_results(DEALER, PLAYER_GAME);
+static bool dealer_calc_final_results(const DEALER, const PLAYER_GAME);
 static void dealer_dealloc_deck(DEALER);
 static void dealer_dealloc_drawn_cards(DEALER);
 static void dealer_dealloc_player_game(DEALER);
@@ -63,7 +63,7 @@ static void dealer_draw_card(DEALER, CARD);
 static void dealer_final(DEALER);
 static void dealer_init_players(DEALER);
 #ifndef DEBUG
-static int dealer_show_options(PLAYER_GAME player_game);
+static int dealer_show_options(const PLAYER_GAME player_game);
 #endif
 
 void dealer_add_player_game(DEALER dealer, PLAYER_GAME player_game)
@@ -169,7 +169,7 @@ void dealer_play(DEALER dealer)
     dealer_dealloc_deck(dealer);
 }
 
-void dealer_print_initial_cards(DEALER dealer)
+void dealer_print_initial_cards(const DEALER dealer)
 {
     DRAWN_CARD pivot;
     int cont = 0;
@@ -192,7 +192,7 @@ void dealer_print_initial_cards(DEALER dealer)
     }
 }
 
-static bool dealer_calc_final_results(DEALER dealer, PLAYER_GAME player_game)
+static bool dealer_calc_final_results(const DEALER dealer, const PLAYER_GAME player_game)
 {
     bool win = false;
 
@@ -324,7 +324,7 @@ static void dealer_init_players(DEALER dealer)
 }
 
 #ifndef DEBUG
-static int dealer_show_options(PLAYER_GAME player_game)
+static int dealer_show_options(const PLAYER_GAME player_game)
 {
     int s;
 

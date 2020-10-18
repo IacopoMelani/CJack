@@ -22,7 +22,7 @@ struct Deck
 };
 
 static void deck_arr_dealloc(CARD *);
-static void deck_arr_init_cards(CARD *d);
+static void deck_arr_init_cards(CARD *);
 static void deck_arr_shuffle(CARD *);
 static void deck_stack_dealloc(struct DeckStack *);
 static struct DeckStack *deck_stack_init(CARD *);
@@ -107,6 +107,7 @@ static void deck_stack_dealloc(struct DeckStack *deck_stack)
 static struct DeckStack *deck_stack_init(CARD *deck_arr)
 {
     struct DeckStack *deck_stack = mmalloc(sizeof(struct DeckStack), "deck stack");
+    deck_stack->next = NULL;
 
     struct DeckStack *pivot;
     CARD tmp;
@@ -121,6 +122,7 @@ static struct DeckStack *deck_stack_init(CARD *deck_arr)
         {
             pivot->next = mmalloc(sizeof(struct DeckStack), "deck stack");
             pivot = pivot->next;
+            pivot->next = NULL;
         }
     }
 

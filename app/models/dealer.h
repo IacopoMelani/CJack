@@ -21,6 +21,6 @@ DEALER dealer_init();
 
 void dealer_play(DEALER);
 
-void dealer_print_initial_cards(DEALER);
+void dealer_print_initial_cards(const DEALER);
 
 #endif

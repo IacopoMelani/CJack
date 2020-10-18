@@ -25,10 +25,10 @@ void card_dealloc(CARD card);
 
 CARD card_init(unsigned int svalue, const char *symbol, const char *seed);
 
-bool card_is_ace(CARD card);
+bool card_is_ace(const CARD card);
 
-void card_print(CARD card);
+void card_print(const CARD card);
 
-void card_sprintf(char *buf, CARD card);
+void card_sprintf(char *buf, const CARD card);
 
 #endif

@@ -15,7 +15,7 @@
 
 static void drawn_card_check_aces(DRAWN_CARD head);
 static DRAWN_CARD drawn_card_init();
-static unsigned int drawn_card_total_score_raw(DRAWN_CARD head);
+static unsigned int drawn_card_total_score_raw(const DRAWN_CARD head);
 
 bool drawn_card_check_blackjack(DRAWN_CARD head)
 {
@@ -33,7 +33,7 @@ void drawn_card_dealloc(DRAWN_CARD drawn_card)
     mfree(drawn_card, CONTEXT_DRAWN_CARD);
 }
 
-unsigned int drawn_card_len(DRAWN_CARD head)
+unsigned int drawn_card_len(const DRAWN_CARD head)
 {
     unsigned int len;
     DRAWN_CARD pivot;
@@ -49,7 +49,7 @@ unsigned int drawn_card_len(DRAWN_CARD head)
     return len;
 }
 
-void drawn_card_print(DRAWN_CARD drawn_card)
+void drawn_card_print(const DRAWN_CARD drawn_card)
 {
     DRAWN_CARD pivot;
 
@@ -78,7 +78,7 @@ void drawn_card_push(DRAWN_CARD *head, CARD card)
     *pivot = node;
 }
 
-unsigned int drawn_card_total_cards(DRAWN_CARD head)
+unsigned int drawn_card_total_cards(const DRAWN_CARD head)
 {
     DRAWN_CARD pivot;
 
@@ -133,7 +133,7 @@ static DRAWN_CARD drawn_card_init()
     return node;
 }
 
-static unsigned int drawn_card_total_score_raw(DRAWN_CARD head)
+static unsigned int drawn_card_total_score_raw(const DRAWN_CARD head)
 {
     DRAWN_CARD pivot;
     unsigned int score = 0;

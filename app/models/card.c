@@ -46,7 +46,7 @@ CARD card_init(unsigned int value, const char *symbol, const char *seed)
     return c;
 }
 
-bool card_is_ace(CARD card)
+bool card_is_ace(const CARD card)
 {
     if (strcmp(card->symbol, SYMBOL_ACE) == 0)
     {
@@ -56,12 +56,12 @@ bool card_is_ace(CARD card)
     return false;
 }
 
-void card_print(CARD card)
+void card_print(const CARD card)
 {
     printf("%s of %s\n", card->symbol, card->seed);
 }
 
-void card_sprintf(char *buf, CARD card)
+void card_sprintf(char *buf, const CARD card)
 {
     sprintf(buf, "%s of %s", card->symbol, card->seed);
 }
