@@ -62,6 +62,7 @@ static void dealer_dealloc_player_game(DEALER);
 static void dealer_draw_card(DEALER, CARD);
 static void dealer_final(DEALER);
 static void dealer_init_players(DEALER);
+static void dealer_init_player_game_bets(DEALER);
 #ifndef DEBUG
 static int dealer_show_options(const PLAYER_GAME player_game);
 #endif
@@ -105,6 +106,8 @@ void dealer_play(DEALER dealer)
     PLAYER_GAME pivot;
 
     dealer->deck = deck_init();
+
+    dealer_init_player_game_bets(dealer);
 
     DEALER_DRAW_INITIAL_CARS(dealer, dealer->deck);
 
@@ -291,36 +294,45 @@ static void dealer_init_players(DEALER dealer)
 #endif
 
     PLAYER player = player_init_with_name(player_name);
-    unsigned int amount_bet;
-
-#ifdef DEBUG
-    amount_bet = 10;
-#else
-    bool valid = false;
-    do
-    {
-        printf("\nInsert amount bet: ");
-        scanf("%u", &amount_bet);
-
-        if (player_can_bet(player, amount_bet))
-        {
-            valid = true;
-        }
-        else
-        {
-            clear_screen();
-            printf("\nCan't bet, you don't have the money to bet");
-        }
-
-    } while (!valid);
-#endif
-
-    player_bet_amount(player, amount_bet);
-
     PLAYER_GAME player_game = player_game_init(player, false);
-    player_game->amount_bet = 10;
-
     dealer_add_player_game(dealer, player_game);
+}
+
+static void dealer_init_player_game_bets(DEALER dealer)
+{
+    PLAYER_GAME pivot;
+    unsigned int amount_bet = 0;
+
+    pivot = dealer->player_game;
+
+    while (pivot != NULL)
+    {
+#ifdef DEBUG
+        amount_bet = 10;
+#else
+        bool valid = false;
+        do
+        {
+            printf("\nInsert amount bet: ");
+            scanf("%u", &amount_bet);
+
+            if (player_can_bet(pivot->player, amount_bet))
+            {
+                valid = true;
+            }
+            else
+            {
+                clear_screen();
+                printf("\nCan't bet, you don't have the money to bet");
+            }
+
+        } while (!valid);
+#endif
+        player_bet_amount(pivot->player, amount_bet);
+        pivot->amount_bet = amount_bet;
+
+        pivot = pivot->next;
+    }
 }
 
 #ifndef DEBUG

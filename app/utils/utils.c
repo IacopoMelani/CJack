@@ -20,7 +20,6 @@ void shuffle_array(void *array, size_t n, size_t size)
     char tmp[size];
     char *arr = array;
     size_t stride = size * sizeof(char);
-    srand(time(NULL));
 
     if (n > 1)
     {

@@ -28,4 +28,4 @@ unsigned int player_total_cards(const PLAYER player);
 
 unsigned int player_total_score(const PLAYER player);
 
-void player_win_amount(PLAYER player, unsigned int amount);
+void player_win_amount(PLAYER player, int amount);
