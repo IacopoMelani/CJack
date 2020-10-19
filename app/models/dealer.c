@@ -106,26 +106,48 @@ DEALER dealer_init()
 
 void dealer_play(DEALER dealer)
 {
-    dealer->deck = deck_init();
+    bool continue_play = true;
+#ifndef DEBUG
+    char continue_chooice;
+#endif
+    do
+    {
+        dealer->deck = deck_init();
+        dealer_init_player_game_bets(dealer);
 
-    dealer_init_player_game_bets(dealer);
+        DEALER_DRAW_INITIAL_CARS(dealer, dealer->deck);
 
-    DEALER_DRAW_INITIAL_CARS(dealer, dealer->deck);
+        // players play
+        dealer_play_players(dealer);
 
-    // players play
-    dealer_play_players(dealer);
+        // dealer play
+        printf("It's dealer turns\n");
+        dealer_play_self(dealer);
+        drawn_card_print(dealer->cards);
+        printf("Total dealer score: %u\n", drawn_card_total_score(dealer->cards));
 
-    // dealer play
-    printf("\nIt's dealer turns\n");
-    dealer_play_self(dealer);
-    drawn_card_print(dealer->cards);
-    printf("Total dealer score: %u\n", drawn_card_total_score(dealer->cards));
+        // calc final results and dealloc players drawn card
+        dealer_final(dealer);
 
-    // calc final results and dealloc players drawn card
-    dealer_final(dealer);
+        dealer_dealloc_drawn_cards(dealer);
+        dealer_dealloc_deck(dealer);
 
-    dealer_dealloc_drawn_cards(dealer);
-    dealer_dealloc_deck(dealer);
+#ifdef DEBUG
+        continue_play = false;
+#else
+        BREAK_LINE;
+        printf("Another match?(y/n): ");
+        scanf(" %c", &continue_chooice);
+        getchar();
+        BREAK_LINE;
+        if (continue_chooice == 'n')
+        {
+            continue_play = false;
+        }
+
+        clear_screen();
+#endif
+    } while (continue_play);
 }
 
 void dealer_print_game(DEALER dealer, PLAYER_GAME player_game, printGameOptions options)
@@ -266,7 +288,7 @@ static void dealer_init_players(DEALER dealer)
 #else
     printf("\nInsert player name: ");
     scanf("%s", player_name);
-    printf("\n");
+    BREAK_LINE;
 #endif
 
     PLAYER player = player_init_with_name(player_name);
