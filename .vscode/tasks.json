@@ -1,36 +1,19 @@
 {
-    "tasks": [
-        {
-            "type": "shell",
-            "label": "C/C++: gcc build active file",
-            "command": "/usr/bin/gcc",
-            "args": [
-                "-g",
-                "main.c",
-                "libs/**/**/*.c",
-                "app/**/*.c",
-                "-o",
-                "main",
-                "-Wall",
-                "-Wextra",
-                "-pedantic",
-                "-std=c99",
-                "-std=c99",
-                "-Wno-unknown-pragmas",
-                "-D",
-                "DEBUG",
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        }
-    ],
-    "version": "2.0.0"
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "C/C++: gcc build active file",
+			"command": "/usr/bin/make",
+			"args": ["debug"],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": ["$gcc"],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	],
+	"version": "2.0.0"
 }

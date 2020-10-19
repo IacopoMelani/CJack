@@ -1,8 +1,8 @@
 debug: main.c
-	$(CC) main.c app/**/*.c libs/**/**/*.c -o main -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG
+	$(CC) -g main.c app/**/*.c libs/**/**/*.c -o main -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG
 
 detect-leak: main.c
-	$(CC) main.c app/**/*.c libs/**/**/*.c -o main -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG && \
+	$(CC) -g main.c app/**/*.c libs/**/**/*.c -o main -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG && \
 	rm -f valgrind-out.txt 2> /dev/null && \
 	valgrind --leak-check=full \
 			--show-leak-kinds=all \
