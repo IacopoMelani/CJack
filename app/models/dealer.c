@@ -8,7 +8,7 @@
 #include "player_game.h"
 
 #include "../../libs/mmalloc/alloc/mmalloc.h"
-#include "../utils/utils.h"
+#include "../../utils/utils.h"
 
 #define CONTEXT_DEALER "dealer"
 

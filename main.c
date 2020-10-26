@@ -3,7 +3,7 @@
 
 #include "app/models/dealer.h"
 #include "libs/mmalloc/registry/registry.h"
-#include "app/utils/utils.h"
+#include "utils/utils.h"
 
 int main()
 {

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "card.h"
-#include "../utils/utils.h"
+#include "../../utils/utils.h"
 #include "../../libs/mmalloc/alloc/mmalloc.h"
 
 #ifndef SHUFFLE_TIMES
