@@ -1,4 +1,6 @@
 CJack
 cjack
+cjack-cli
 main
+main-cli
 valgrind-out.txt

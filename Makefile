@@ -1,12 +1,16 @@
 app   = app/**/*.c
 libs  = libs/**/**/*.c
 utils = utils/*.c
+cli   = cli/**.c
 
-debug: main.c
-	$(CC) -g main.c $(utils) $(app) $(libs) -o main -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG
+outfile-cli-debug=main-cli
+outfile-cli-release=cjack-cli
 
-detect-leak: main.c
-	$(CC) -g main.c $(utils) $(app) $(libs) -o main -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG && \
+debug-cli:
+	$(CC) -g $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-debug) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG -D CLI
+
+detect-leak-cli:
+	$(CC) -g $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-debug) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG -D CLI && \
 	rm -f valgrind-out.txt 2> /dev/null && \
 	valgrind --leak-check=full \
 			--show-leak-kinds=all \
@@ -15,5 +19,5 @@ detect-leak: main.c
 			--log-file=valgrind-out.txt \
 			./main
 
-release: main.c
-	$(CC) main.c $(utils) $(app) $(libs) -o $(shell basename $(CURDIR)) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D RELEASE
+release-cli:
+	$(CC) $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-release) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D RELEASE -D CLI
