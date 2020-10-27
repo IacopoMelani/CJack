@@ -3,4 +3,5 @@ cjack
 cjack-cli
 main
 main-cli
+main-gtk
 valgrind-out.txt

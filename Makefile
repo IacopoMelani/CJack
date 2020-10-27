@@ -2,8 +2,10 @@ app   = app/**/*.c
 libs  = libs/**/**/*.c
 utils = utils/*.c
 cli   = cli/**.c
+gtk   = gtk/**.c
 
 outfile-cli-debug=main-cli
+outfile-gtk-debug=main-gtk
 outfile-cli-release=cjack-cli
 
 debug-cli:
@@ -21,3 +23,7 @@ detect-leak-cli:
 
 release-cli:
 	$(CC) $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-release) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D RELEASE -D CLI
+
+
+debug-gtk:
+	$(CC) -g $(gtk) $(utils) $(app) $(libs) `pkg-config --cflags gtk+-3.0` -o $(outfile-gtk-debug) `pkg-config --libs gtk+-3.0`
