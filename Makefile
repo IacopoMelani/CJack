@@ -17,7 +17,7 @@ detect-leak-cli:
 			--track-origins=yes \
 			--verbose \
 			--log-file=valgrind-out.txt \
-			./main
+			./$(outfile-cli-debug)
 
 release-cli:
 	$(CC) $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-release) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D RELEASE -D CLI
