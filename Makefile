@@ -25,7 +25,7 @@ release-cli:
 	$(CC) $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-release) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D RELEASE -D CLI
 
 debug-gtk:
-	$(CC) -g $(gtk) $(utils) $(app) $(libs) `pkg-config --cflags gtk+-3.0` -o $(outfile-gtk-debug) `pkg-config --libs gtk+-3.0` -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragma -D DEBUG -D GTK
+	$(CC) -g $(gtk) $(utils) $(app) $(libs) `pkg-config --cflags gtk+-3.0` -o $(outfile-gtk-debug) `pkg-config --libs gtk+-3.0` -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG -D GTK
 
 detect-leak-gtk:
 	$(CC) -g $(gtk) $(utils) $(app) $(libs)  `pkg-config --cflags gtk+-3.0` -o $(outfile-gtk-debug) `pkg-config --libs gtk+-3.0` -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG -D GTK && \
