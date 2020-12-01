@@ -18,6 +18,11 @@ struct Player
 
 static void player_sprintf(char *buf, const PLAYER player);
 
+inline unsigned int player_bank_account(const PLAYER player)
+{
+    return player->bank_account;
+}
+
 bool player_bet_amount(PLAYER player, unsigned int amount)
 {
     if (player->bank_account < amount)
@@ -80,9 +85,14 @@ PLAYER player_init_with_name(char *name)
     return player;
 }
 
-char *player_name(const PLAYER player)
+inline char *player_name(const PLAYER player)
 {
     return player->name;
+}
+
+void player_print_bank_account(const PLAYER player)
+{
+    printf("Bank account: %u", player->bank_account);
 }
 
 void player_print_cards(const PLAYER player)
