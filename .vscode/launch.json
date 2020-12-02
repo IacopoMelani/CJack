@@ -5,10 +5,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "gcc - Compila ed esegui il debug del file attivo",
+            "name": "DEBUG",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/main",
+            "program": "${workspaceRoot}/main-cli",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Abilita la riformattazione per gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: gcc build active file",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
+            "name": "RELEASE",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/cjack",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

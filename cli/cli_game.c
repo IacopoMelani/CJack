@@ -9,6 +9,12 @@
 #include "../libs/mmalloc/alloc/mmalloc.h"
 #include "../utils/utils.h"
 
+#ifdef DEBUG
+#ifdef AUTO
+#define AUTO_DEBUG
+#endif
+#endif
+
 #define DEALER_DRAW_INITIAL_CARD(cli_game) \
     cli_game_dealer_draw_card(cli_game);   \
     cli_game_dealer_draw_card(cli_game);
@@ -17,7 +23,7 @@
     player_draw_card(player, deck_draw_card(dealer_get_deck(dealer))); \
     player_draw_card(player, deck_draw_card(dealer_get_deck(dealer)));
 
-#ifdef DEBUG
+#ifdef AUTO_DEBUG
 #define PLAY_DEBUG(player, dealer)                                         \
     if (player_total_score(player) < MIN_SCORE_DEALER_STOP)                \
     {                                                                      \
@@ -48,7 +54,7 @@ typedef enum
     total
 } printGameOptions;
 
-#ifndef DEBUG
+#ifndef AUTO_DEBUG
 enum options
 {
     card = 1,
@@ -67,7 +73,7 @@ static void cli_game_init_player_game_bets(CLI_GAME);
 static void cli_game_players_play(CLI_GAME);
 static void cli_game_play_player_game(CLI_GAME, PLAYER_GAME);
 static void cli_game_print_game(CLI_GAME, PLAYER_GAME, printGameOptions);
-#ifndef DEBUG
+#ifndef AUTO_DEBUG
 static int cli_game_show_options(const PLAYER_GAME player_game);
 #endif
 
@@ -91,7 +97,7 @@ void cli_game_play(CLI_GAME cli_game)
 {
     bool continue_play = true;
 
-#ifndef DEBUG
+#ifndef AUTO_DEBUG
     char continue_chooice;
 #endif
     do
@@ -118,7 +124,7 @@ void cli_game_play(CLI_GAME cli_game)
             break;
         }
 
-#ifdef DEBUG
+#ifdef AUTO_DEBUG
         continue_play = false;
 #else
         BREAK_LINE;
@@ -220,7 +226,7 @@ static void cli_game_init_players(CLI_GAME cli_game)
     // for now inits one player
     char *player_name = mmalloc(50 * sizeof(char), "player name");
 
-#ifdef DEBUG
+#ifdef AUTO_DEBUG
     char *tmpName = "John";
     memcpy(player_name, tmpName, strlen(tmpName) + 1);
 #else
@@ -243,7 +249,7 @@ static void cli_game_init_player_game_bets(CLI_GAME cli_game)
 
     while (pivot != NULL)
     {
-#ifdef DEBUG
+#ifdef AUTO_DEBUG
         amount_bet = 10;
 #else
         bool valid = false;
@@ -298,7 +304,7 @@ static void cli_game_play_player_game(CLI_GAME cli_game, PLAYER_GAME player_game
     while (!stop && player_total_score(player_game->player) < MAX_VALID_SCORE)
     {
         cli_game_print_game(cli_game, player_game, actual);
-#ifdef DEBUG
+#ifdef AUTO_DEBUG
         PLAY_DEBUG(player_game->player, cli_game->dealer);
 #else
         int s;
@@ -341,7 +347,7 @@ static void cli_game_print_game(CLI_GAME cli_game, PLAYER_GAME player_game, prin
     printf(format, player_total_score(player_game->player));
 }
 
-#ifndef DEBUG
+#ifndef AUTO_DEBUG
 static int cli_game_show_options(const PLAYER_GAME player_game)
 {
     int s;
