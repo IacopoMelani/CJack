@@ -12,8 +12,10 @@ outfile-cli-release=cjack-cli
 debug-cli:
 	$(CC) -g $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-debug) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG -D CLI
 
+debug-auto-cli:
+	$(CC) -g $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-debug) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG -D AUTO -D CLI
+
 detect-leak-cli:
-	$(CC) -g $(cli) $(utils) $(app) $(libs) -o $(outfile-cli-debug) -Wall -Wextra -pedantic -std=c99 -Wno-unknown-pragmas -D DEBUG -D CLI && \
 	rm -f valgrind-out.txt 2> /dev/null && \
 	valgrind --leak-check=full \
 			--show-leak-kinds=all \

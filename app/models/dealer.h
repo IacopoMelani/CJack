@@ -8,8 +8,6 @@
 
 #define MAX_VALID_SCORE 21
 
-#define MAX_CARDS_FOR_DOUBLE 2
-
 typedef struct Dealer Dealer;
 
 typedef Dealer *DEALER;
