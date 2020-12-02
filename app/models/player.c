@@ -23,26 +23,26 @@ inline unsigned int player_bank_account(const PLAYER player)
     return player->bank_account;
 }
 
-bool player_bet_amount(PLAYER player, unsigned int amount)
+BOOL player_bet_amount(PLAYER player, unsigned int amount)
 {
     if (player->bank_account < amount)
     {
-        return false;
+        return FALSE;
     }
 
     player->bank_account -= amount;
 
-    return true;
+    return TRUE;
 }
 
-bool player_can_bet(const PLAYER player, unsigned int amount)
+BOOL player_can_bet(const PLAYER player, unsigned int amount)
 {
     if (player->bank_account < amount)
     {
-        return false;
+        return FALSE;
     }
 
-    return true;
+    return TRUE;
 }
 
 void player_dealloc(PLAYER player)

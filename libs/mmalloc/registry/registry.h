@@ -18,5 +18,5 @@ extern size_t registry_total_size(void);
 extern void registry_print_alloc(void);
 
 /* writes to registry alloc a new allocation */
-extern bool registry_write_alloc(size_t size, void *mem_alloc_ptr, const char *context);
+extern BOOL registry_write_alloc(size_t size, void *mem_alloc_ptr, const char *context);
 #endif

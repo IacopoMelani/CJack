@@ -5,34 +5,34 @@
 #define CONTEXT_PLAYER_GAME "player game"
 
 /*  Returns TRUE if player can double down */
-bool player_game_can_double_down(PLAYER_GAME player_game)
+BOOL player_game_can_double_down(PLAYER_GAME player_game)
 {
     if (player_total_cards(player_game->player) > MAX_CARDS_FOR_DOUBLE)
     {
-        return false;
+        return FALSE;
     }
 
     unsigned int actual_bet = player_game->amount_bet;
 
     if (actual_bet > player_bank_account(player_game->player))
     {
-        return false;
+        return FALSE;
     }
 
-    return true;
+    return TRUE;
 }
 
-bool player_game_bet_amount(PLAYER_GAME player_game, unsigned int amount_bet)
+BOOL player_game_bet_amount(PLAYER_GAME player_game, unsigned int amount_bet)
 {
-    bool res = player_bet_amount(player_game->player, amount_bet);
+    BOOL res = player_bet_amount(player_game->player, amount_bet);
     if (!res)
     {
-        return false;
+        return FALSE;
     }
 
     player_game->amount_bet += amount_bet;
 
-    return true;
+    return TRUE;
 }
 
 void player_game_dealloc(PLAYER_GAME player_game)
@@ -46,7 +46,7 @@ void player_game_drawn_card(PLAYER_GAME player_game, CARD card)
     player_draw_card(player_game->player, card);
 }
 
-PLAYER_GAME player_game_init(PLAYER player, bool is_cpu)
+PLAYER_GAME player_game_init(PLAYER player, BOOL is_cpu)
 {
     PLAYER_GAME player_game = mmalloc(sizeof(struct PlayerGame), CONTEXT_PLAYER_GAME);
 

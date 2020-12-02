@@ -77,7 +77,7 @@ void registry_print_alloc(void)
     printf("\n");
 }
 
-bool registry_write_alloc(size_t size, void *mem_alloc_ptr, const char *context)
+BOOL registry_write_alloc(size_t size, void *mem_alloc_ptr, const char *context)
 {
     if (registry == NULL)
     {
@@ -90,10 +90,10 @@ bool registry_write_alloc(size_t size, void *mem_alloc_ptr, const char *context)
 
     if (registry == NULL)
     {
-        return false;
+        return FALSE;
     }
 
-    return true;
+    return TRUE;
 }
 
 static struct RegistryAlloc *add_registry_alloc(struct RegistryAlloc *registry, size_t size, void *mem_alloc_ptr, const char *context)

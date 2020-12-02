@@ -17,14 +17,14 @@ static void drawn_card_check_aces(DRAWN_CARD head);
 static DRAWN_CARD drawn_card_init();
 static unsigned int drawn_card_total_score_raw(const DRAWN_CARD head);
 
-bool drawn_card_check_blackjack(DRAWN_CARD head)
+BOOL drawn_card_check_blackjack(DRAWN_CARD head)
 {
     if (drawn_card_total_score(head) == MAX_SCORE_LIMIT && drawn_card_len(head) == CARD_LEN_TO_BLACKJACK)
     {
-        return true;
+        return TRUE;
     }
 
-    return false;
+    return FALSE;
 }
 
 void drawn_card_dealloc(DRAWN_CARD drawn_card)

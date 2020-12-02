@@ -8,9 +8,9 @@ typedef Player *PLAYER;
 unsigned int player_bank_account(const PLAYER player);
 
 /* subtracts the passed amount to player and returns result, false if no available amount */
-bool player_bet_amount(PLAYER player, unsigned int amount);
+BOOL player_bet_amount(PLAYER player, unsigned int amount);
 
-bool player_can_bet(const PLAYER player, unsigned int amount);
+BOOL player_can_bet(const PLAYER player, unsigned int amount);
 
 void player_dealloc(PLAYER player);
 

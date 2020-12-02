@@ -11,21 +11,21 @@ typedef struct PlayerGame
 {
     PLAYER player;
     unsigned int amount_bet;
-    bool is_cpu;
+    BOOL is_cpu;
     struct PlayerGame *next;
 } PlayerGame;
 
 typedef PlayerGame *PLAYER_GAME;
 
-bool player_game_can_double_down(PLAYER_GAME player_game);
+BOOL player_game_can_double_down(PLAYER_GAME player_game);
 
-bool player_game_bet_amount(PLAYER_GAME player_game, unsigned int amount_bet);
+BOOL player_game_bet_amount(PLAYER_GAME player_game, unsigned int amount_bet);
 
 void player_game_dealloc(PLAYER_GAME player_game);
 
 void player_game_drawn_card(PLAYER_GAME player_game, CARD card);
 
-PLAYER_GAME player_game_init(PLAYER player, bool is_cpu);
+PLAYER_GAME player_game_init(PLAYER player, BOOL is_cpu);
 
 void player_game_reset_amount_bet(PLAYER_GAME player_game);
 

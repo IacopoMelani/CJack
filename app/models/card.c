@@ -42,13 +42,13 @@ CARD card_init(unsigned int value, const char *symbol, const char *seed)
     return c;
 }
 
-bool card_is_ace(const CARD card)
+BOOL card_is_ace(const CARD card)
 {
-    bool valid = false;
+    BOOL valid = FALSE;
 
     if (strcmp(card->symbol, SYMBOL_ACE) == 0)
     {
-        valid = true;
+        valid = TRUE;
     }
 
     return valid;

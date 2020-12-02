@@ -31,7 +31,7 @@
     }                                                                      \
     else                                                                   \
     {                                                                      \
-        stop = true;                                                       \
+        stop = TRUE;                                                       \
     }
 #else
 #define DOUBLE_DOWN(player_game, dealer)                                                \
@@ -39,7 +39,7 @@
     {                                                                                   \
         player_game_bet_amount(player_game, player_game->amount_bet);                   \
         player_draw_card(player_game->player, deck_draw_card(dealer_get_deck(dealer))); \
-        stop = true;                                                                    \
+        stop = TRUE;                                                                    \
     }
 #endif
 
@@ -63,10 +63,10 @@ enum options
 };
 #endif
 
-static bool cli_game_calc_final_results(CLI_GAME, PLAYER_GAME);
+static BOOL cli_game_calc_final_results(CLI_GAME, PLAYER_GAME);
 static void cli_game_dealer_draw_card(CLI_GAME);
 static void cli_game_dealer_play(CLI_GAME);
-static bool cli_game_final(CLI_GAME);
+static BOOL cli_game_final(CLI_GAME);
 static void cli_game_init_deck(CLI_GAME);
 static void cli_game_init_players(CLI_GAME);
 static void cli_game_init_player_game_bets(CLI_GAME);
@@ -95,7 +95,7 @@ CLI_GAME cli_game_init()
 
 void cli_game_play(CLI_GAME cli_game)
 {
-    bool continue_play = true;
+    BOOL continue_play = TRUE;
 
 #ifndef AUTO_DEBUG
     char continue_chooice;
@@ -115,7 +115,7 @@ void cli_game_play(CLI_GAME cli_game)
         printf("It's dealer turns\n");
         cli_game_dealer_play(cli_game);
 
-        bool res = cli_game_final(cli_game);
+        BOOL res = cli_game_final(cli_game);
 
         dealer_dealloc_drawn_card_and_deck(cli_game->dealer);
 
@@ -125,7 +125,7 @@ void cli_game_play(CLI_GAME cli_game)
         }
 
 #ifdef AUTO_DEBUG
-        continue_play = false;
+        continue_play = FALSE;
 #else
         BREAK_LINE;
         printf("Another match?(y/n): ");
@@ -134,7 +134,7 @@ void cli_game_play(CLI_GAME cli_game)
         BREAK_LINE;
         if (continue_chooice == 'n')
         {
-            continue_play = false;
+            continue_play = FALSE;
         }
 
         clear_screen();
@@ -143,9 +143,9 @@ void cli_game_play(CLI_GAME cli_game)
     } while (continue_play);
 }
 
-static bool cli_game_calc_final_results(CLI_GAME cli_game, PLAYER_GAME player_game)
+static BOOL cli_game_calc_final_results(CLI_GAME cli_game, PLAYER_GAME player_game)
 {
-    bool win = false;
+    BOOL win = FALSE;
 
     if (player_total_score(player_game->player) > MAX_VALID_SCORE)
     {
@@ -153,7 +153,7 @@ static bool cli_game_calc_final_results(CLI_GAME cli_game, PLAYER_GAME player_ga
     }
     else if (drawn_card_total_score(dealer_get_drawn_card(cli_game->dealer)) > MAX_VALID_SCORE)
     {
-        win = true;
+        win = TRUE;
         printf("%s wins %u$, dealer exceeds 21\n", player_name(player_game->player), player_game->amount_bet);
     }
     else if (player_total_score(player_game->player) <= drawn_card_total_score(dealer_get_drawn_card(cli_game->dealer)))
@@ -162,7 +162,7 @@ static bool cli_game_calc_final_results(CLI_GAME cli_game, PLAYER_GAME player_ga
     }
     else
     {
-        win = true;
+        win = TRUE;
         printf("%s wins %u$ \n", player_name(player_game->player), player_game->amount_bet);
     }
 
@@ -186,7 +186,7 @@ static void cli_game_dealer_play(CLI_GAME cli_game)
     BREAK_LINE;
 }
 
-static bool cli_game_final(CLI_GAME cli_game)
+static BOOL cli_game_final(CLI_GAME cli_game)
 {
     PLAYER_GAME pivot;
 
@@ -206,14 +206,14 @@ static bool cli_game_final(CLI_GAME cli_game)
         {
             printf("Match ends, you run out of money!");
             BREAK_LINE;
-            return false;
+            return FALSE;
         }
         // TODO: if cpu and can't bet pop from player_game
 
         pivot = pivot->next;
     }
 
-    return true;
+    return TRUE;
 }
 
 static void cli_game_init_deck(CLI_GAME cli_game)
@@ -236,7 +236,7 @@ static void cli_game_init_players(CLI_GAME cli_game)
 #endif
 
     PLAYER player = player_init_with_name(player_name);
-    PLAYER_GAME player_game = player_game_init(player, false);
+    PLAYER_GAME player_game = player_game_init(player, FALSE);
     dealer_add_player_game(cli_game->dealer, player_game);
 }
 
@@ -252,7 +252,7 @@ static void cli_game_init_player_game_bets(CLI_GAME cli_game)
 #ifdef AUTO_DEBUG
         amount_bet = 10;
 #else
-        bool valid = false;
+        BOOL valid = FALSE;
         do
         {
             player_print_bank_account(pivot->player);
@@ -262,7 +262,7 @@ static void cli_game_init_player_game_bets(CLI_GAME cli_game)
 
             if (player_can_bet(pivot->player, amount_bet))
             {
-                valid = true;
+                valid = TRUE;
             }
             else
             {
@@ -295,7 +295,7 @@ static void cli_game_players_play(CLI_GAME cli_game)
 
 static void cli_game_play_player_game(CLI_GAME cli_game, PLAYER_GAME player_game)
 {
-    bool stop = false;
+    BOOL stop = FALSE;
 
     printf("%s it's your turn!\n", player_name(player_game->player));
 
@@ -318,7 +318,7 @@ static void cli_game_play_player_game(CLI_GAME cli_game, PLAYER_GAME player_game
             DOUBLE_DOWN(player_game, cli_game->dealer);
             break;
         case stand:
-            stop = true;
+            stop = TRUE;
             break;
         default:
             break;

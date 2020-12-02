@@ -11,7 +11,7 @@ typedef struct DrawnCard
 
 typedef DrawnCard *DRAWN_CARD;
 
-bool drawn_card_check_blackjack(DRAWN_CARD head);
+BOOL drawn_card_check_blackjack(DRAWN_CARD head);
 
 void drawn_card_dealloc(DRAWN_CARD drawn_card);
 
