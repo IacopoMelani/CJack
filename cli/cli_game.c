@@ -23,8 +23,7 @@
     player_draw_card(player, deck_draw_card(dealer_get_deck(dealer))); \
     player_draw_card(player, deck_draw_card(dealer_get_deck(dealer)));
 
-#ifdef AUTO_DEBUG
-#define PLAY_DEBUG(player, dealer)                                         \
+#define AUTO_PLAY(player, dealer)                                          \
     if (player_total_score(player) < MIN_SCORE_DEALER_STOP)                \
     {                                                                      \
         player_draw_card(player, deck_draw_card(dealer_get_deck(dealer))); \
@@ -33,7 +32,8 @@
     {                                                                      \
         stop = TRUE;                                                       \
     }
-#else
+
+#ifndef AUTO_DEBUG
 #define DOUBLE_DOWN(player_game, dealer)                                                \
     if (player_game_can_double_down(player_game))                                       \
     {                                                                                   \
@@ -42,6 +42,8 @@
         stop = TRUE;                                                                    \
     }
 #endif
+
+#define MAX_PARTY_PLAYERS 4
 
 struct CliGame
 {
@@ -190,6 +192,8 @@ static BOOL cli_game_final(CLI_GAME cli_game)
 {
     PLAYER_GAME pivot;
 
+    BOOL can_continue = TRUE;
+
     pivot = dealer_get_player_game(cli_game->dealer);
 
     while (pivot != NULL)
@@ -206,14 +210,18 @@ static BOOL cli_game_final(CLI_GAME cli_game)
         {
             printf("Match ends, you run out of money!");
             BREAK_LINE;
-            return FALSE;
+            can_continue = FALSE;
         }
-        // TODO: if cpu and can't bet pop from player_game
+
+        if (pivot->is_cpu && !player_can_bet(pivot->player, 1))
+        {
+            // TODO: remove cpu player from pool
+        }
 
         pivot = pivot->next;
     }
 
-    return TRUE;
+    return can_continue;
 }
 
 static void cli_game_init_deck(CLI_GAME cli_game)
@@ -223,21 +231,38 @@ static void cli_game_init_deck(CLI_GAME cli_game)
 
 static void cli_game_init_players(CLI_GAME cli_game)
 {
-    // for now inits one player
-    char *player_name = mmalloc(50 * sizeof(char), "player name");
+    int i = 0;
+    BOOL is_cpu = FALSE;
+
+    for (i = 0; i < MAX_PARTY_PLAYERS; i++)
+    {
+        if (i != 0)
+        {
+            is_cpu = TRUE;
+        }
+
+        char *player_name = mmalloc(50 * sizeof(char), "player name");
 
 #ifdef AUTO_DEBUG
-    char *tmpName = "John";
-    memcpy(player_name, tmpName, strlen(tmpName) + 1);
+        char *tmpName = is_cpu ? "cpu" : "John";
+        memcpy(player_name, tmpName, strlen(tmpName) + 1);
 #else
-    printf("\nInsert player name: ");
-    scanf("%s", player_name);
-    BREAK_LINE;
+        if (is_cpu)
+        {
+            sprintf(player_name, "%s %d", "cpu", i);
+        }
+        else
+        {
+            printf("\nInsert player name: ");
+            scanf("%s", player_name);
+        }
+        BREAK_LINE;
 #endif
 
-    PLAYER player = player_init_with_name(player_name);
-    PLAYER_GAME player_game = player_game_init(player, FALSE);
-    dealer_add_player_game(cli_game->dealer, player_game);
+        PLAYER player = player_init_with_name(player_name);
+        PLAYER_GAME player_game = player_game_init(player, is_cpu);
+        dealer_add_player_game(cli_game->dealer, player_game);
+    }
 }
 
 static void cli_game_init_player_game_bets(CLI_GAME cli_game)
@@ -301,29 +326,36 @@ static void cli_game_play_player_game(CLI_GAME cli_game, PLAYER_GAME player_game
 
     PLAYER_DRAW_INITIAL_CARD(player_game->player, cli_game->dealer);
 
-    while (!stop && player_total_score(player_game->player) < MAX_VALID_SCORE)
+    if (player_game->is_cpu)
     {
-        cli_game_print_game(cli_game, player_game, actual);
-#ifdef AUTO_DEBUG
-        PLAY_DEBUG(player_game->player, cli_game->dealer);
-#else
-        int s;
-        s = cli_game_show_options(player_game);
-        switch (s)
+        AUTO_PLAY(player_game->player, cli_game->dealer);
+    }
+    else
+    {
+        while (!stop && player_total_score(player_game->player) < MAX_VALID_SCORE)
         {
-        case card:
-            player_draw_card(player_game->player, deck_draw_card(dealer_get_deck(cli_game->dealer)));
-            break;
-        case double_down:
-            DOUBLE_DOWN(player_game, cli_game->dealer);
-            break;
-        case stand:
-            stop = TRUE;
-            break;
-        default:
-            break;
-        }
+            cli_game_print_game(cli_game, player_game, actual);
+#ifdef AUTO_DEBUG
+            AUTO_PLAY(player_game->player, cli_game->dealer);
+#else
+            int s;
+            s = cli_game_show_options(player_game);
+            switch (s)
+            {
+            case card:
+                player_draw_card(player_game->player, deck_draw_card(dealer_get_deck(cli_game->dealer)));
+                break;
+            case double_down:
+                DOUBLE_DOWN(player_game, cli_game->dealer);
+                break;
+            case stand:
+                stop = TRUE;
+                break;
+            default:
+                break;
+            }
 #endif
+        }
     }
 }
 
